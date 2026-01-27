@@ -1,0 +1,28 @@
+﻿using CongratulatorSPA.Server.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace CongratulatorSPA.Server.Data.Mappings
+{
+    public class PersonMap : IEntityTypeConfiguration<Person>
+    {
+        public void Configure(EntityTypeBuilder<Person> builder)
+        {
+            builder.ToTable("People").HasKey(p => p.Guid);
+
+            builder.Property(p => p.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder.Property(p => p.BirthDate)
+                .HasColumnType("date")
+                .IsRequired();
+
+            builder.Property(p => p.RelationshipType)
+                .HasConversion<string>()
+                .IsRequired();
+
+            // TODO: Photos
+        }
+    }
+}

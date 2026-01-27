@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="congratulatorspa.client/congratulatorspa.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="CongratulatorSPA.Server/CongratulatorSPA.Server.csproj" />
+</Solution>
