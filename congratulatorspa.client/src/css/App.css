@@ -1,0 +1,73 @@
+/* ------------------- Root ------------------- */
+#root {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: left;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sort {
+  margin: 20px 0;
+  display: inline-block;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sort select {
+  padding: 6px 25px 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #90c6ff;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none; /* Убираем стандартную стрелку в браузерах */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='10' height='5' viewBox='0 0 10 5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 5 5-5z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 5px;
+}
+
+.sort select:hover {
+  border-color: #72b6ff;
+  background-color: #fff;
+}
+
+.sort select:focus {
+  outline: none;
+  border-color: #5b9dd9;
+  box-shadow: 0 0 5px rgba(91, 157, 217, 0.5);
+}
+
+/* ------------------- Карточки ------------------- */
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}
+
+/* ------------------- Подсказки / мелкий текст ------------------- */
+.read-the-docs {
+  color: #6c757d;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* ------------------- Заголовки внутри карточек ------------------- */
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #212529;
+}

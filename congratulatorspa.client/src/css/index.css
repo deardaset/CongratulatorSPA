@@ -1,0 +1,58 @@
+/* ------------------- Базовые стили ------------------- */
+:root {
+  --color-primary: #007bff;
+  --color-primary-hover: #0056b3;
+  --color-text: #212529;
+  --color-muted: #6c757d;
+  --color-bg: #f8f9fa;
+  --color-white: #ffffff;
+  --radius: 8px;
+  --shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ------------------- Ссылки ------------------- */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* ------------------- Контейнер ------------------- */
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ------------------- Заголовки ------------------- */
+h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: var(--color-text);
+}
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
