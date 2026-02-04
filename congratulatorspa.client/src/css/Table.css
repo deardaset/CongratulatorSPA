@@ -27,3 +27,42 @@ table tbody tr:hover {
   background-color: #e6f0ff;
   transition: background-color 0.2s ease-in-out;
 }
+
+table .action-td {
+  max-width: 50px;
+}
+
+table .image {
+  height: 40px; /* стандартный размер иконки, можно подправить */
+  width: 40px;  /* если квадратная, иначе можно auto */
+  display: flex;
+  align-items: left;
+  justify-content: center;
+}
+
+table .image img {    
+  max-height: 100%; /* подстраивается под контейнер */
+  margin: 10px;
+  width: auto;      /* сохраняет пропорции */
+  display: block;
+}
+
+table .image img {
+  max-height: 100%;
+  margin: 10px;
+  width: auto;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+table .image img:hover {
+  filter: drop-shadow(0 0 6px rgba(140, 82, 255, 0.8));
+  transform: scale(1.1);
+}
+
+table .image img:active {
+  transform: scale(1.05) translateY(2px);
+  filter: drop-shadow(0 0 3px rgba(140, 82, 255, 0.4));
+  opacity: 0.85;
+}

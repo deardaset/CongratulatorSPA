@@ -7,21 +7,60 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.sort {
+.button {
+  margin-left: 15px;
+  padding: 7px 16px;
+
+  border-radius: 8px;
+  border: 1px solid #90c6ff;
+  background-color: #eaf4ff;
+
+  font-size: 16px;
+  font-family: inherit;
+
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hover */
+.button:hover {
+  background-color: #ffffff;
+  border-color: #72b6ff;
+}
+
+/* Focus (клавиатура / accessibility) */
+.button:focus {
+  outline: none;
+  border-color: #5b9dd9;
+  box-shadow: 0 0 5px rgba(91, 157, 217, 0.5);
+}
+
+/* Active (нажатие) */
+.button:active {
+  transform: translateY(1px);
+}
+
+/* ------------------- Action-panel ------------------- */
+.action-panel {
   margin: 20px 0;
   display: inline-block;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  transition: all 0.3s ease-in-out;
 }
 
-.sort select {
+.action-panel > * + * {
+  margin-left: 20px;
+}
+
+.action-panel select {
   padding: 6px 25px 6px 10px;
   border-radius: 8px;
   border: 1px solid #90c6ff;
   background-color: #f9f9f9;
   font-size: 16px;
-  cursor: pointer;
   transition: all 0.3s ease;
-  appearance: none; /* Убираем стандартную стрелку в браузерах */
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='10' height='5' viewBox='0 0 10 5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 5 5-5z' fill='%23666'/%3E%3C/svg%3E");
@@ -30,12 +69,38 @@
   background-size: 10px 5px;
 }
 
-.sort select:hover {
+.action-panel select:hover {
   border-color: #72b6ff;
   background-color: #fff;
 }
 
-.sort select:focus {
+.action-panel select:focus {
+  outline: none;
+  border-color: #5b9dd9;
+  box-shadow: 0 0 5px rgba(91, 157, 217, 0.5);
+}
+
+.action-panel input[type="text"] {
+  margin-left: 15px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #90c6ff;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  min-width: 220px;
+}
+
+.action-panel input[type="text"]::placeholder {
+  color: #999;
+}
+
+.action-panel input[type="text"]:hover {
+  background-color: #fff;
+  border-color: #72b6ff;
+}
+
+.action-panel input[type="text"]:focus {
   outline: none;
   border-color: #5b9dd9;
   box-shadow: 0 0 5px rgba(91, 157, 217, 0.5);

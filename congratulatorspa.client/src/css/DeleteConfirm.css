@@ -1,0 +1,54 @@
+/* ---------- Delete confirm ---------- */
+.delete-confirm {
+  margin: 10px 0 18px 0;
+  padding: 14px 18px;
+
+  background-color: #fff5f5;
+  border: 1px solid #ffb3b3;
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  animation: slideDown 0.25s ease-out;
+}
+
+.delete-confirm p {
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Кнопки уезжают вправо */
+.delete-confirm .form-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Danger button */
+.button.danger {
+  background-color: #ffecec;
+  border-color: #ff9c9c;
+  color: #b30000;
+}
+
+.button.danger:hover {
+  background-color: #ffdede;
+  border-color: #ff7a7a;
+}
+
+.button.danger:active {
+  transform: translateY(1px);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

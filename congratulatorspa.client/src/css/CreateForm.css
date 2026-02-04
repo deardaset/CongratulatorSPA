@@ -1,0 +1,114 @@
+/* -------- Create Form -------- */
+.create-form {
+  margin: 20px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  max-width: 420px;
+
+  border: 1px solid #90c6ff;
+  border-radius: 12px;
+  background-color: #f5faff;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  
+  transition: all 0.3s ease-in-out;
+}
+
+.slide-down {
+  overflow: hidden;
+  animation: slideDown 0.35s ease-out forwards;
+
+  transition: all 0.3s ease-in-out;
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    max-height: 500px; /* с запасом */
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.create-form h3 {
+    margin: 0 auto;
+    padding: 0 auto;
+}
+
+.create-form select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #90c6ff;
+  background-color: #ffffff;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.create-form select:hover {
+  background-color: #fff;
+  border-color: #72b6ff;
+}
+
+.create-form select:focus {
+  outline: none;
+  border-color: #5b9dd9;
+  box-shadow: 0 0 5px rgba(91, 157, 217, 0.5);
+}
+
+/* Inputs */
+.create-form input {
+  padding: 8px 12px;
+
+  border-radius: 8px;
+  border: 1px solid #90c6ff;
+  background-color: #ffffff;
+
+  font-size: 16px;
+  font-family: inherit;
+
+  transition: all 0.3s ease;
+}
+
+.create-form input::placeholder {
+  color: #999;
+}
+
+.create-form input:hover {
+  border-color: #72b6ff;
+}
+
+.create-form input:focus {
+  outline: none;
+  border-color: #5b9dd9;
+  box-shadow: 0 0 5px rgba(91, 157, 217, 0.5);
+}
+
+/* -------- Buttons inside form -------- */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.form-actions .button {
+  margin-left: 0; /* перекрываем общий стиль */
+}
+
+/* Cancel button (чуть спокойнее) */
+.form-actions .button[type="button"] {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+.form-actions .button[type="button"]:hover {
+  background-color: #ffffff;
+  border-color: #bbb;
+}
