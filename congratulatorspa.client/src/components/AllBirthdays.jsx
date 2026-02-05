@@ -80,10 +80,12 @@ const AllBirthdays = () => {
   return (
     <main className='container'>
       <h1>All Birthdays</h1>      
-      <div className='action-panel'>  
+      <div className='action-panel'> 
+{/*CreateButton*/} 
         <button className='button' onClick={() => setCreateForm(!createForm)}>
           {createForm ? 'Close form' : 'Create person'}
         </button>      
+{/*Sort*/}
         <label>
             Sort by:{' '}
             <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
@@ -93,6 +95,7 @@ const AllBirthdays = () => {
                 <option value="relationship">Relationship</option>
             </select>
         </label> 
+{/*Search*/}
         <label>
           Search: {' '}
           <input 
@@ -103,12 +106,14 @@ const AllBirthdays = () => {
           /> 
         </label>
       </div>
+{/*CreateForm*/}
       {createForm && (
         <div className='create-form slide-down'>
           <h3>Create person</h3>
           <CreateForm onCreated={reloadPeople} onCancel={() => setCreateForm(false)} />
         </div>
-      )} 
+      )}
+{/*MainTable*/}
       <table>
         <thead>
           <tr>
@@ -122,7 +127,6 @@ const AllBirthdays = () => {
         <tbody>
           {people.map(p => (
             <React.Fragment key={p.guid}>
-{/*MainTable*/}
               <tr>
                 <td>{p.name}</td>
                 <td>{new Date(p.birthDate).toLocaleDateString('ru-RU')}</td>

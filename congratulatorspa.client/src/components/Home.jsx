@@ -103,6 +103,7 @@ const Home = () => {
             <th>Name</th>
             <th>Birthdate</th>
             <th>Age</th>
+            <th>Will be</th>
             <th>Relationship</th>
           </tr>
         </thead>
@@ -112,6 +113,7 @@ const Home = () => {
               <td>{p.name}</td>
               <td>{new Date(p.birthDate).toLocaleDateString('ru-RU')}</td>
               <td>{calculateAge(p.birthDate)}</td>
+              <td>{calculateAge(p.birthDate) + 1}</td>
               <td>{p.relationshipType}</td>
             </tr>
           ))}

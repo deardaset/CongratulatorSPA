@@ -10,7 +10,7 @@ namespace CongratulatorSPA.Server.Services
         {
             var person = await repository.GetPersonByIdAsync(guid);
             if (person == null)
-                throw new PersonNotFoundException("Person not found");
+                throw new NotFoundException("Person not found");
 
             await repository.DeletePersonAsync(person);
         }

@@ -30,7 +30,7 @@ namespace CongratulatorSPA.Server.Repositories
         {
             var person = await context.People.FirstOrDefaultAsync(p => p.Guid == guid);
             if (person == null)
-                throw new PersonNotFoundException("Person not found");
+                throw new NotFoundException("Person not found");
             return person;
         }
 

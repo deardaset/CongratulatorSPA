@@ -1,6 +1,7 @@
 using CongratulatorSPA.Server.Data;
 using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Interfaces.Services;
+using CongratulatorSPA.Server.Middleware;
 using CongratulatorSPA.Server.Repositories;
 using CongratulatorSPA.Server.Services;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.MapControllers();
 
