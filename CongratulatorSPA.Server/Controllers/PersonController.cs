@@ -44,10 +44,13 @@ namespace CongratulatorSPA.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Person>> GetPeopleAsync([FromServices] IGetPeopleService service)
+        public async Task<IActionResult> GetPeople(
+            [FromServices] IGetPeopleService service,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var people = await service.RunAsync();
-            return people;
+            var result = await service.RunAsync(page, pageSize);
+            return Ok(result);
         }
     }
 }

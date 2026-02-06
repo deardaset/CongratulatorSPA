@@ -50,6 +50,9 @@ function calculateAge(birthDate) {
 
 const AllBirthdays = () => {
     const [people, setPeople] = useState([]);
+    const [page, setPage] = useState(1);
+    const [pageSize] = useState(10);
+    const [totalCount, setTotalCount] = useState(0);
     const [sortBy, setSortBy] = useState('name');
     const [search, setSearch] = useState('');
     //CreateForm
@@ -62,10 +65,11 @@ const AllBirthdays = () => {
     const [deletingGuid, setDeletingGuid] = useState(null);
 
     const reloadPeople = () => {
-      getPeople()
+      getPeople(page, pageSize)
         .then(data => {
-        const sorted = getBirthdays(data, sortBy, search);
+         const sorted = getBirthdays(data.people, sortBy, search);
         setPeople(sorted);
+        setTotalCount(data.totalCount);
         })
         .catch(err => console.error(err));
       setCreateForm(false);
@@ -75,7 +79,9 @@ const AllBirthdays = () => {
   
     useEffect(() => {
       reloadPeople();
-    }, [sortBy, search]);
+    }, [page, sortBy, search]);
+
+    const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <main className='container'>
@@ -192,6 +198,25 @@ const AllBirthdays = () => {
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <button
+          className="icon-button"
+          disabled={page === 1}
+          onClick={() => setPage(p => p - 1)}
+        >
+          <img src="/left-arrow.png" alt="Previous page" />
+        </button>
+
+        <span>{page} / {totalPages}</span>
+
+        <button
+          className="icon-button"
+          disabled={page === totalPages}
+          onClick={() => setPage(p => p + 1)}
+        >
+          <img src="/right-arrow.png" alt="Next page" />
+        </button>
+      </div>
     </main>
   )
 }

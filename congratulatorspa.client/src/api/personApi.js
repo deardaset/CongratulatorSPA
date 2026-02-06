@@ -1,10 +1,13 @@
 import { resumeToPipeableStream } from "react-dom/server";
 
-export async function getPeople() {
-  const response = await fetch('/api/person');
+export async function getPeople(page, pageSize) {
+  const response = await fetch(
+    `/api/person?page=${page}&pageSize=${pageSize}`
+  );
 
   if (!response.ok) {
-    throw new Error('Failed to fetch people');
+    const err = await response.json();
+    throw new Error(err.erro || 'Unknown error');
   }
 
   return await response.json();
@@ -20,7 +23,8 @@ export async function createPerson(person) {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to create person');
+    const jsonError = await response.json();
+    throw new Error(jsonError.error || 'Unknown error')
   }
 }
 
@@ -34,7 +38,8 @@ export async function updatePerson(guid, data) {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to update person');
+    const jsonError = await response.json();
+    throw new Error(jsonError.error || 'Unknown error')
   }
 }
 
@@ -44,6 +49,7 @@ export async function deletePerson(guid) {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to delete person');
+    const jsonError = await response.json();
+    throw new Error(jsonError.error || 'Unknown error')
   }
 }

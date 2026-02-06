@@ -52,3 +52,18 @@
     transform: translateY(0);
   }
 }
+
+/* -------- Form-error -------- */
+.form-error {
+  width: 100%;
+  padding: 10px 14px;
+
+  background-color: #fff1f1;
+  border: 1px solid #ffb3b3;
+  border-radius: 8px;
+
+  color: #b30000;
+  font-size: 14px;
+
+  animation: slideDown 0.2s ease-out;
+}

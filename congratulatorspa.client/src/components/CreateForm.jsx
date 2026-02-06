@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createPerson } from '../api/personApi';
 
 const CreateForm = ({ onCreated, onCancel }) => {
+  const [error, setError] = useState(null);
   const [form, setForm] = useState({
     name: '',
     birthDate: '',
@@ -13,9 +14,9 @@ const CreateForm = ({ onCreated, onCancel }) => {
       ...prev,
       [name]: value
     }));
-};
+  };
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -23,7 +24,7 @@ const handleSubmit = async (e) => {
       onCreated();   // обновляем список
       onCancel();    // закрываем форму
     } catch (err) {
-      console.error(err);
+      setError(err.message);
     }
   };
 return (
@@ -67,6 +68,11 @@ return (
           Cancel
         </button>
       </div>
+      {error && (
+        <div className="form-error">
+          {error}
+        </div>
+      )}
     </form>
   );
 };

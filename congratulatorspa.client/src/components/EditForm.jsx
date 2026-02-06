@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { updatePerson } from '../api/personApi';
 
 const EditForm = ({ person, onCancel, onSaved }) => {
+  const [error, setError] = useState(null);
   const [form, setForm] = useState({
     name: person.name,
     birthDate: person.birthDate.split('T')[0],
@@ -20,7 +21,7 @@ const EditForm = ({ person, onCancel, onSaved }) => {
         onSaved();   // обновляем список
         onCancel();    // закрываем форму
     } catch (err) {
-        console.error(err);
+        setError(err.message);
     }
   };
 
@@ -57,6 +58,11 @@ const EditForm = ({ person, onCancel, onSaved }) => {
           Cancel
         </button>
       </div>
+      {error && (
+        <div className="form-error">
+          {error}
+        </div>
+      )}
     </form>
   );
 };
