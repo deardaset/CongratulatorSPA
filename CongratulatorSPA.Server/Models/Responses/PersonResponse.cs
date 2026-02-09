@@ -8,5 +8,6 @@ namespace CongratulatorSPA.Server.Models.Responses
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public RelationshipType RelationshipType { get; set; }
+        public int Age { get; set;  }
     }
 }

@@ -21,17 +21,13 @@ namespace CongratulatorSPA.Server.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<(List<Person>, int totalCount)> GetAllPeopleAsync(int page, int pageSize)
+        public async Task<(List<Person>, int totalCount)> GetAllPeopleAsync()
         {
             var query = context.People.AsQueryable();
 
-            var totalCount = await query.CountAsync();
+            var totalCount = query.Count();
 
-            var people = await query
-                .OrderBy(p => p.Name)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var people = await query.ToListAsync();
 
             return (people, totalCount);
         }

@@ -1,78 +1,50 @@
 import { useState, useEffect } from 'react';
-import { getPeople } from "../api/personApi";
+import { upcomingPeople } from "../api/personApi";
 
-function getBirthdays(people, today = new Date(), sortBy = 'birthdate', search = '', daysAhead = 30) {
-  const normaltoday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const endDate = new Date(normaltoday);
-  endDate.setDate(endDate.getDate() + daysAhead);
+function calculateDaysToBirthday(birthDate) {
+  var result = '';
+  const today = new Date();
+  const normalizedToday = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  );
+  const newBirthDate = new Date(birthDate);
+  const nextBirthday = new Date(normalizedToday.getFullYear(), newBirthDate.getMonth(), newBirthDate.getDate());
 
-  const peopleWithNextBirthday = people.map(p => {
-    const birthDate = new Date(p.birthDate);
-    const thisYearBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+  const MS_IN_DAY = 1000 * 60 * 60 * 24;
+  const diffDays = Math.round((nextBirthday - normalizedToday) / MS_IN_DAY);
 
-    if (thisYearBirthday < normaltoday) {
-      thisYearBirthday.setFullYear(thisYearBirthday.getFullYear() + 1);
-    }
+  if (diffDays === 0) {
+    result = 'Today';
+  } else if (diffDays === 1) {
+    result = 'Tomorrow';
+  } else {
+    result = `${diffDays} days`
+  }
 
-    return { ...p, nextBirthday: thisYearBirthday };
-  });
-
-  const upcoming = peopleWithNextBirthday.filter(p => p.nextBirthday >= normaltoday && p.nextBirthday <= endDate);
-
-  const normalizedSearch = search.trim().toLowerCase();
-  return upcoming
-    .filter(p => {
-      if (!normalizedSearch) return true;
-
-      return (
-        p.name.toLowerCase().includes(normalizedSearch) ||
-        p.relationshipType.toLowerCase().includes(normalizedSearch)
-      );
-    }).sort((a, b) => {
-    switch (sortBy.toLowerCase()) {
-      case 'name':
-        return a.name.localeCompare(b.name);
-      case 'age':
-        return calculateAge(a.birthDate) - calculateAge(b.birthDate);
-      case 'relationship':
-        return a.relationshipType.localeCompare(b.relationshipType);
-      case 'birthdate':
-      default:
-        return a.nextBirthday - b.nextBirthday;
-    }
-  });
-}
-
-function calculateAge(birthDate) {
-    const today = new Date();
-    const birthdate = new Date(birthDate);
-    var age = today.getFullYear() - birthdate.getFullYear();
-
-    const birthdayThisyear = new Date(
-      today.getFullYear(),
-      birthdate.getMonth(),
-      birthdate.getDate()
-    );
-
-    if (today < birthdayThisyear) {
-      --age;
-    }
-    return age;
-}
+  return result;
+};
 
 const Home = () => {
   const [people, setPeople] = useState([]);
   const [sortBy, setSortBy] = useState('birthdate');
-  const [search, setSearch] = useState('');
+  const [searchBy, setSearch] = useState('');
+  //Pagination
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
 
    useEffect(() => {
-    getPeople()
+    upcomingPeople({page, pageSize, sortBy, searchBy})
       .then(data => {
-        const sorted = getBirthdays(data, new Date(), sortBy, search, 30);
-        setPeople(sorted);
+        setPeople(data.data);
+        setTotalCount(data.totalCount);
       })
       .catch(err => console.error(err));
-  }, [sortBy, search]);
+  }, [page, sortBy, searchBy]);
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <main className='container'>
@@ -92,7 +64,7 @@ const Home = () => {
             <input 
               type="text" 
               placeholder="Search" 
-              value={search} 
+              value={searchBy} 
               onChange={e => setSearch(e.target.value)} 
             /> 
         </label>
@@ -103,7 +75,7 @@ const Home = () => {
             <th>Name</th>
             <th>Birthdate</th>
             <th>Age</th>
-            <th>Will be</th>
+            <th>To Birthday</th>
             <th>Relationship</th>
           </tr>
         </thead>
@@ -112,13 +84,32 @@ const Home = () => {
             <tr key={p.guid}>
               <td>{p.name}</td>
               <td>{new Date(p.birthDate).toLocaleDateString('ru-RU')}</td>
-              <td>{calculateAge(p.birthDate)}</td>
-              <td>{calculateAge(p.birthDate) + 1}</td>
+              <td>{p.age}</td>
+              <td>{calculateDaysToBirthday(p.birthDate)}</td>
               <td>{p.relationshipType}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <button
+          className="icon-button"
+          disabled={page === 1}
+          onClick={() => setPage(p => p - 1)}
+        >
+          <img src="/left-arrow.png" alt="Previous page" />
+        </button>
+
+        <span>{page} / {totalPages}</span>
+
+        <button
+          className="icon-button"
+          disabled={page === totalPages}
+          onClick={() => setPage(p => p + 1)}
+        >
+          <img src="/right-arrow.png" alt="Next page" />
+        </button>
+      </div>
     </main>
   )
 }

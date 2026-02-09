@@ -1,6 +1,7 @@
 ﻿using CongratulatorSPA.Server.Entities;
 using CongratulatorSPA.Server.Interfaces.Services;
 using CongratulatorSPA.Server.Models.Requests;
+using CongratulatorSPA.Server.Models.Responses;
 using CongratulatorSPA.Server.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,12 +45,18 @@ namespace CongratulatorSPA.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPeople(
-            [FromServices] IGetPeopleService service,
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetPeopleAsync(
+            [FromServices] IGetPeopleService<PersonResponse> service,
+            [FromQuery] GetPeopleOptionsRequest request)
         {
-            var result = await service.RunAsync(page, pageSize);
+            var result = await service.RunAsync(request);
+            return Ok(result);
+        }
+
+        [HttpGet("main")]
+        public async Task<IActionResult> GetUpcomingAsync([FromServices] IGetUpcomingService<PersonResponse> service, [FromQuery] GetPeopleOptionsRequest request)
+        {
+            var result = await service.RunAsync(request);
             return Ok(result);
         }
     }

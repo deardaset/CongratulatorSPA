@@ -1,21 +1,19 @@
-﻿using CongratulatorSPA.Server.Entities;
-using CongratulatorSPA.Server.Exceptions;
+﻿using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Interfaces.Services;
-using CongratulatorSPA.Server.Models.Enums;
 using CongratulatorSPA.Server.Models.Requests;
 using CongratulatorSPA.Server.Models.Responses;
-using System.Xml.Linq;
 
 namespace CongratulatorSPA.Server.Services
 {
-    public class GetPeopleService(IPersonRepository repository) : IGetPeopleService<PersonResponse>
+    public class GetUpcomingService(IPersonRepository repository) : IGetUpcomingService<PersonResponse>
     {
+        const int ADD_DAYS = 30;
         public async Task<PagedResponse<PersonResponse>> RunAsync(GetPeopleOptionsRequest request)
         {
             if (request.Page <= 0 || request.PageSize <= 0)
                 throw new BadRequestException("Invalid pagination parameters");
-            
+
             var (people, totalCount) = await repository.GetAllPeopleAsync();
 
             var sortBy = request.SortBy?.ToLower() ?? string.Empty;
@@ -35,9 +33,11 @@ namespace CongratulatorSPA.Server.Services
                 p.RelationshipType.ToString().Contains(request.SearchBy ?? string.Empty, StringComparison.OrdinalIgnoreCase)
             );
 
-            var filteredPeople = searchedPeople.ToList();
+            var filteredPeople = searchedPeople.Where(p => p.NextBirthday >= DateTime.Today && p.NextBirthday <= DateTime.Today.AddDays(ADD_DAYS));
 
-            var paginatedPeople = searchedPeople
+            var count = filteredPeople.ToList();
+
+            var paginatedPeople = filteredPeople
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .ToList();
@@ -52,7 +52,7 @@ namespace CongratulatorSPA.Server.Services
                     RelationshipType = p.RelationshipType,
                     Age = p.Age
                 }).ToList(),
-                TotalCount = filteredPeople.Count,
+                TotalCount = count.Count,
                 Page = request.Page,
                 PageSize = request.PageSize
             };

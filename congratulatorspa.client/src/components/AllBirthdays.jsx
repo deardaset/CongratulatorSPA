@@ -5,56 +5,13 @@ import CreateForm from './CreateForm'
 import EditForm from './EditForm'
 import DeleteConfirm from './DeleteConfirm'
 
-function getBirthdays(people, sortBy = 'name', search = '') {
-  const normalizedSearch = search.trim().toLowerCase();
-  return [...people]
-    .filter(p => {
-      if (!normalizedSearch) return true;
-
-      return (
-        p.name.toLowerCase().includes(normalizedSearch) ||
-        p.relationshipType.toLowerCase().includes(normalizedSearch)
-      );
-    }).sort((a, b) => {
-    switch (sortBy.toLowerCase()) {
-      case 'name':        
-        return a.name.localeCompare(b.name);
-      case 'age':
-        return calculateAge(a.birthDate) - calculateAge(b.birthDate);
-      case 'birthdate':
-        return new Date(a.birthDate) - new Date(b.birthDate);
-      case 'relationship':
-        return a.relationshipType.localeCompare(b.relationshipType);
-      default:
-        return 0;
-    }
-  });
-}
-
-function calculateAge(birthDate) {
-    const today = new Date();
-    const birthdate = new Date(birthDate);
-    var age = today.getFullYear() - birthdate.getFullYear();
-
-    const birthdayThisyear = new Date(
-      today.getFullYear(),
-      birthdate.getMonth(),
-      birthdate.getDate()
-    );
-
-    if (today < birthdayThisyear) {
-      --age;
-    }
-    return age;
-}
-
 const AllBirthdays = () => {
     const [people, setPeople] = useState([]);
     const [page, setPage] = useState(1);
     const [pageSize] = useState(10);
     const [totalCount, setTotalCount] = useState(0);
     const [sortBy, setSortBy] = useState('name');
-    const [search, setSearch] = useState('');
+    const [searchBy, setSearch] = useState('');
     //CreateForm
     const [createForm, setCreateForm] = useState(false);
     //EditForm
@@ -65,10 +22,9 @@ const AllBirthdays = () => {
     const [deletingGuid, setDeletingGuid] = useState(null);
 
     const reloadPeople = () => {
-      getPeople(page, pageSize)
+      getPeople({page, pageSize, sortBy, searchBy})
         .then(data => {
-         const sorted = getBirthdays(data.people, sortBy, search);
-        setPeople(sorted);
+        setPeople(data.data);
         setTotalCount(data.totalCount);
         })
         .catch(err => console.error(err));
@@ -79,7 +35,7 @@ const AllBirthdays = () => {
   
     useEffect(() => {
       reloadPeople();
-    }, [page, sortBy, search]);
+    }, [page, sortBy, searchBy]);
 
     const totalPages = Math.ceil(totalCount / pageSize);
 
@@ -107,7 +63,7 @@ const AllBirthdays = () => {
           <input 
             type="text" 
             placeholder="Search" 
-            value={search} 
+            value={searchBy} 
             onChange={e => setSearch(e.target.value)} 
           /> 
         </label>
@@ -136,7 +92,7 @@ const AllBirthdays = () => {
               <tr>
                 <td>{p.name}</td>
                 <td>{new Date(p.birthDate).toLocaleDateString('ru-RU')}</td>
-                <td>{calculateAge(p.birthDate)}</td>
+                <td>{p.age}</td>
                 <td>{p.relationshipType}</td>
                 <td className="action-td">
                   <div className='image'>

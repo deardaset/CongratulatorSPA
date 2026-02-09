@@ -1,16 +1,41 @@
 import { resumeToPipeableStream } from "react-dom/server";
 
-export async function getPeople(page, pageSize) {
-  const response = await fetch(
-    `/api/person?page=${page}&pageSize=${pageSize}`
-  );
+export async function upcomingPeople({page = 1, pageSize = 10, sortBy, searchBy}) {
+  const params = new URLSearchParams();
+
+  params.append('page', page);
+  params.append('pageSize', pageSize);
+
+  if (sortBy) params.append('sortBy', sortBy);
+  if (searchBy) params.append('searchBy', searchBy);
+
+  const response = await fetch(`/api/person/main?${params.toString()}`);
 
   if (!response.ok) {
     const err = await response.json();
-    throw new Error(err.erro || 'Unknown error');
+    throw new Error(err.error || 'Unknown error');
   }
+  
+  return response.json();
+}
 
-  return await response.json();
+export async function getPeople({page = 1, pageSize = 10, sortBy, searchBy}) {
+  const params = new URLSearchParams();
+
+  params.append('page', page);
+  params.append('pageSize', pageSize);
+
+  if (sortBy) params.append('sortBy', sortBy);
+  if (searchBy) params.append('searchBy', searchBy);
+
+  const response = await fetch(`/api/person?${params.toString()}`);
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || 'Unknown error');
+  }
+  
+  return response.json();
 }
 
 export async function createPerson(person) {

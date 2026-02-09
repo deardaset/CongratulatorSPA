@@ -2,6 +2,7 @@ using CongratulatorSPA.Server.Data;
 using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Interfaces.Services;
 using CongratulatorSPA.Server.Middleware;
+using CongratulatorSPA.Server.Models.Responses;
 using CongratulatorSPA.Server.Repositories;
 using CongratulatorSPA.Server.Services;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,8 @@ builder.Services.AddScoped<ICreatePersonService, CreatePersonService>();
 builder.Services.AddScoped<IUpdatePersonService, UpdatePersonService>();
 builder.Services.AddScoped<IDeletePersonService, DeletePersonService>();
 builder.Services.AddScoped<IGetPersonService, GetPersonService>();
-builder.Services.AddScoped<IGetPeopleService, GetPeopleService>();
+builder.Services.AddScoped<IGetPeopleService<PersonResponse>, GetPeopleService>();
+builder.Services.AddScoped<IGetUpcomingService<PersonResponse>, GetUpcomingService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
