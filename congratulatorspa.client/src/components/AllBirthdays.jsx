@@ -79,6 +79,7 @@ const AllBirthdays = () => {
       <table>
         <thead>
           <tr>
+            <th>Photo</th>
             <th>Name</th>
             <th>Birthdate</th>
             <th>Age</th>
@@ -90,6 +91,9 @@ const AllBirthdays = () => {
           {people.map(p => (
             <React.Fragment key={p.guid}>
               <tr>
+                <td className='avatar'>
+                  <img src={p.photoUrl} alt="user-photo" />
+                </td>
                 <td>{p.name}</td>
                 <td>{new Date(p.birthDate).toLocaleDateString('ru-RU')}</td>
                 <td>{p.age}</td>
@@ -122,7 +126,7 @@ const AllBirthdays = () => {
 {/*EditForm*/}
               {editForm === true && editingGuid === p.guid && (
                 <tr>
-                  <td colSpan="5">
+                  <td colSpan="6">
                     <EditForm
                       person={p}
                       onCancel={() => {
@@ -137,7 +141,7 @@ const AllBirthdays = () => {
 {/*DeleteForm*/}
               {deleteForm === true && deletingGuid === p.guid && (
                 <tr>
-                  <td colSpan="5">
+                  <td colSpan="6">
                     <DeleteConfirm 
                       guid={p.guid}
                       name={p.name}                      

@@ -38,13 +38,10 @@ export async function getPeople({page = 1, pageSize = 10, sortBy, searchBy}) {
   return response.json();
 }
 
-export async function createPerson(person) {
+export async function createPerson(formData) {
   const response = await fetch('/api/person', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(person)
+    body: formData
   });
 
   if (!response.ok) {
@@ -53,18 +50,15 @@ export async function createPerson(person) {
   }
 }
 
-export async function updatePerson(guid, data) {
+export async function updatePerson(guid, formData) {
   const response = await fetch(`/api/person/${guid}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
+    body: formData
   });
 
   if (!response.ok) {
     const jsonError = await response.json();
-    throw new Error(jsonError.error || 'Unknown error')
+    throw new Error(jsonError.error || 'Unknown error');
   }
 }
 

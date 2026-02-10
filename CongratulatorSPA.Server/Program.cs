@@ -29,6 +29,7 @@ builder.Services.AddScoped<IDeletePersonService, DeletePersonService>();
 builder.Services.AddScoped<IGetPersonService, GetPersonService>();
 builder.Services.AddScoped<IGetPeopleService<PersonResponse>, GetPeopleService>();
 builder.Services.AddScoped<IGetUpcomingService<PersonResponse>, GetUpcomingService>();
+builder.Services.AddScoped<IStorageService, StorageService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

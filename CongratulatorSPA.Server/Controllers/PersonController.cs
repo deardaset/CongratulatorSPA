@@ -14,7 +14,7 @@ namespace CongratulatorSPA.Server.Controllers
     public class PersonController : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> CreatePersonAsync([FromServices] ICreatePersonService service, [FromBody] CreatePersonRequest request)
+        public async Task<IActionResult> CreatePersonAsync([FromServices] ICreatePersonService service, [FromForm] CreatePersonRequest request)
         {
             var result = await service.RunAsync(request);
             return Ok(result);
@@ -22,7 +22,7 @@ namespace CongratulatorSPA.Server.Controllers
 
         [HttpPut]
         [Route("{guid}")]
-        public async Task<IActionResult> UpdatePersonAsync([FromRoute] Guid guid, [FromServices] IUpdatePersonService service, UpdatePersonRequest request)
+        public async Task<IActionResult> UpdatePersonAsync([FromRoute] Guid guid, [FromServices] IUpdatePersonService service,[FromForm] UpdatePersonRequest request)
         {
             var result = await service.RunAsync(guid, request);
             return Ok(result);

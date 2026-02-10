@@ -6,7 +6,8 @@ const EditForm = ({ person, onCancel, onSaved }) => {
   const [form, setForm] = useState({
     name: person.name,
     birthDate: person.birthDate.split('T')[0],
-    relationshipType: person.relationshipType
+    relationshipType: person.relationshipType,
+    photo: null
   });
 
   const handleChange = e => {
@@ -17,11 +18,19 @@ const EditForm = ({ person, onCancel, onSaved }) => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-        await updatePerson(person.guid, form);
-        onSaved();   // обновляем список
-        onCancel();    // закрываем форму
+      const formData = new FormData();
+      formData.append('name', form.name);
+      formData.append('birthDate', form.birthDate);
+      formData.append('relationshipType', form.relationshipType);
+      if (form.photo) {
+        formData.append('photo', form.photo); // добавляем файл, если выбран
+      }
+
+      await updatePerson(person.guid, formData);
+      onSaved();   // обновляем список
+      onCancel();  // закрываем форму
     } catch (err) {
-        setError(err.message);
+      setError(err.message);
     }
   };
 
@@ -51,6 +60,22 @@ const EditForm = ({ person, onCancel, onSaved }) => {
         <option value="Relative">Relative</option>
         <option value="Coworker">Coworker</option>
       </select>
+
+      <label className="file-upload">
+        Upload photo
+        <input
+          type="file"
+          name="photo"
+          accept="image/*"
+          onChange={(e) =>
+            setForm(prev => ({ ...prev, photo: e.target.files[0] }))
+          }
+        />
+      </label>
+
+      {form.photo && (
+        <span className="file-name">{form.photo.name}</span>
+      )}
 
       <div className="form-actions">
         <button className="button" type="submit">Save</button>

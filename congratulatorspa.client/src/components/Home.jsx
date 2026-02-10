@@ -69,28 +69,32 @@ const Home = () => {
             /> 
         </label>
       </div>     
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Birthdate</th>
-            <th>Age</th>
-            <th>To Birthday</th>
-            <th>Relationship</th>
-          </tr>
-        </thead>
-        <tbody>
-          {people.map(p => (
-            <tr key={p.guid}>
-              <td>{p.name}</td>
-              <td>{new Date(p.birthDate).toLocaleDateString('ru-RU')}</td>
-              <td>{p.age}</td>
-              <td>{calculateDaysToBirthday(p.birthDate)}</td>
-              <td>{p.relationshipType}</td>
+        <table>
+          <thead>
+            <tr>
+              <th>Photo</th>
+              <th>Name</th>
+              <th>Birthdate</th>
+              <th>Age</th>
+              <th>To Birthday</th>
+              <th>Relationship</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {people.map(p => (
+              <tr key={p.guid}>
+                <td className='avatar'>
+                  <img src={p.photoUrl} alt="user-photo"/>
+                </td>
+                <td>{p.name}</td>
+                <td>{new Date(p.birthDate).toLocaleDateString('ru-RU')}</td>
+                <td>{p.age}</td>
+                <td>{calculateDaysToBirthday(p.birthDate)}</td>
+                <td>{p.relationshipType}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       <div className="pagination">
         <button
           className="icon-button"

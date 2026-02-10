@@ -6,7 +6,8 @@ const CreateForm = ({ onCreated, onCancel }) => {
   const [form, setForm] = useState({
     name: '',
     birthDate: '',
-    relationshipType: ''
+    relationshipType: '',
+    photo: null
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,13 +21,21 @@ const CreateForm = ({ onCreated, onCancel }) => {
     e.preventDefault();
 
     try {
-      await createPerson(form);
-      onCreated();   // обновляем список
-      onCancel();    // закрываем форму
+      const formData = new FormData();
+      formData.append('name', form.name);
+      formData.append('birthDate', form.birthDate);
+      formData.append('relationshipType', form.relationshipType);
+      if (form.photo != null) {
+        formData.append('photo', form.photo); // файл добавляется сюда
+      }
+
+      await createPerson(formData);
+      onCreated();
+      onCancel();
     } catch (err) {
       setError(err.message);
     }
-  };
+  }
 return (
     <form className="create-form" onSubmit={handleSubmit}>
       <input
@@ -59,6 +68,15 @@ return (
         <option value="Relative">Relative</option>
         <option value="Coworker">Coworker</option>
       </select>
+
+      <input
+        type="file"
+        name="photo"
+        accept="image/*"
+        onChange={(e) =>
+          setForm(prev => ({ ...prev, photo: e.target.files[0] }))
+        }
+      />
 
       <div className="form-actions">
         <button type="submit" className="button">

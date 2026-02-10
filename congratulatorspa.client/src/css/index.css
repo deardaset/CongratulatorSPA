@@ -18,6 +18,7 @@
 }
 
 body {
+  scrollbar-gutter: stable;
   font-family: var(--font-main);
   background-color: var(--color-bg);
   color: var(--color-text);

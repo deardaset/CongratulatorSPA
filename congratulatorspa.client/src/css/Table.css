@@ -66,3 +66,18 @@ table .image img:active {
   filter: drop-shadow(0 0 3px rgba(140, 82, 255, 0.4));
   opacity: 0.85;
 }
+
+
+td.avatar {
+  width: 20px; 
+  padding: 4px;
+}
+
+td.avatar img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;    
+  border-radius: 50%; 
+  display: block;
+  margin: 0 auto;
+}

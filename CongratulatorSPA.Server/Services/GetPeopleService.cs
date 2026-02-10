@@ -50,6 +50,7 @@ namespace CongratulatorSPA.Server.Services
                     Name = p.Name,
                     BirthDate = p.BirthDate,
                     RelationshipType = p.RelationshipType,
+                    PhotoUrl = p.PhotoUrl,
                     Age = p.Age
                 }).ToList(),
                 TotalCount = filteredPeople.Count,

@@ -9,6 +9,7 @@ namespace CongratulatorSPA.Server.Entities
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public RelationshipType RelationshipType { get; set; }
+        public string PhotoUrl { get; set; }
 
         [NotMapped]
         public int Age => CalculateAge();
@@ -31,11 +32,10 @@ namespace CongratulatorSPA.Server.Entities
             var nextbirthday = new DateTime(today.Year, BirthDate.Month, BirthDate.Day);
             var age = today.Year - BirthDate.Year;
 
-            if (BirthDate < nextbirthday)
+            if (today < nextbirthday)
                 age--;
 
             return age;
         }
-        // TODO: Photos
     }
 }

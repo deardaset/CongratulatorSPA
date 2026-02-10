@@ -75,3 +75,34 @@
 
   animation: slideDown 0.2s ease-out;
 }
+
+/* -------- Custom file upload -------- */
+.file-upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: 1px solid #90c6ff;
+  background-color: #eaf4ff;
+
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.file-upload:hover {
+  background-color: #ffffff;
+  border-color: #72b6ff;
+}
+
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.file-name {
+  font-size: 13px;
+  color: #555;
+  margin-left: 8px;
+}
