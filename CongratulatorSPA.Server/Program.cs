@@ -5,6 +5,10 @@ using CongratulatorSPA.Server.Middleware;
 using CongratulatorSPA.Server.Models.Responses;
 using CongratulatorSPA.Server.Repositories;
 using CongratulatorSPA.Server.Services;
+using CongratulatorSPA.Server.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -18,6 +22,30 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(
                     new JsonStringEnumConverter());
     });
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreatePersonValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdatePersonValidator>();
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(x => x.Value.Errors.Count > 0)
+            .SelectMany(x => x.Value.Errors)
+            .Select(e => e.ErrorMessage)
+            .ToList();
+
+        return new JsonResult(new
+        {
+            error = string.Join("; ", errors)
+        })
+        {
+            StatusCode = StatusCodes.Status400BadRequest
+        };
+    };
+});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

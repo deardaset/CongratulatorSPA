@@ -69,14 +69,22 @@ return (
         <option value="Coworker">Coworker</option>
       </select>
 
-      <input
-        type="file"
-        name="photo"
-        accept="image/*"
-        onChange={(e) =>
-          setForm(prev => ({ ...prev, photo: e.target.files[0] }))
-        }
-      />
+      <label className="file-upload">
+        Upload photo
+        <input
+          type="file"
+          name="photo"
+          accept="image/*"
+          onChange={(e) =>
+            setForm(prev => ({ ...prev, photo: e.target.files[0] }))
+          }
+        />
+      </label>
+      
+      {form.photo && (
+        <span className="file-name">{form.photo.name}</span>
+      )}
+      
 
       <div className="form-actions">
         <button type="submit" className="button">

@@ -11,17 +11,6 @@ namespace CongratulatorSPA.Server.Services
     {
         public async Task<PersonResponse> RunAsync(Guid guid, UpdatePersonRequest request)
         {
-            if (!Regex.IsMatch(request.Name, @"^[\p{L}\s]+$"))
-                throw new BadRequestException("Name must be valid");
-            if (request.Name.Length < 2 || request.Name.Length > 50)
-                throw new BadRequestException($"Name must be longer than 2 symbols and less than 50");
-            if (request.BirthDate > DateTime.Today || (DateTime.Today.Year - request.BirthDate.Year) > 110)
-                throw new BadRequestException("Birthdate must be valid");
-            if (!request.Photo.ContentType.StartsWith("image/"))
-                throw new BadRequestException("Only images allowed");
-            if (request.Photo.Length > 5_000_000)
-                throw new BadRequestException("Max 5MB");
-
             var person = await repository.GetPersonByIdAsync(guid);
             if (person == null)
                 throw new NotFoundException("Person not found");
