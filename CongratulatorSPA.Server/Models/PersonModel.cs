@@ -1,9 +1,9 @@
 ﻿using CongratulatorSPA.Server.Models.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CongratulatorSPA.Server.Entities
+namespace CongratulatorSPA.Server.Models
 {
-    public class Person
+    public class PersonModel
     {
         public Guid Guid { get; set; } = Guid.NewGuid();
         public string Name { get; set; }

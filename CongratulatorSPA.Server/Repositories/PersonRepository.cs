@@ -31,7 +31,7 @@ namespace CongratulatorSPA.Server.Repositories
 
             return (people, totalCount);
         }
-
+        
         public async Task<Person> GetPersonByIdAsync(Guid guid)
         {
             var person = await context.People.FirstOrDefaultAsync(p => p.Guid == guid);
