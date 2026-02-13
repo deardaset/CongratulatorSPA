@@ -1,3 +1,4 @@
+using CongratulatorSPA.Server.AutoMapperProfiles;
 using CongratulatorSPA.Server.Data;
 using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Interfaces.Services;
@@ -58,6 +59,8 @@ builder.Services.AddScoped<IGetPersonService, GetPersonService>();
 builder.Services.AddScoped<IGetPeopleService<PersonResponse>, GetPeopleService>();
 builder.Services.AddScoped<IGetUpcomingService<PersonResponse>, GetUpcomingService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
+
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<PersonProfile>());
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

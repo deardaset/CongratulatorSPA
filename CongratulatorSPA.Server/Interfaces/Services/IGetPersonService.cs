@@ -1,9 +1,10 @@
 ﻿using CongratulatorSPA.Server.Entities;
+using CongratulatorSPA.Server.Models;
 
 namespace CongratulatorSPA.Server.Interfaces.Services
 {
     public interface IGetPersonService
     {
-        public Task<Person> RunAsync(Guid guid);
+        public Task<PersonModel> RunAsync(Guid guid);
     }
 }

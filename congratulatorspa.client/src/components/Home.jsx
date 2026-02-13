@@ -30,18 +30,22 @@ const Home = () => {
   const [people, setPeople] = useState([]);
   const [sortBy, setSortBy] = useState('birthdate');
   const [searchBy, setSearch] = useState('');
+  //Loading
+  const [loading, setLoading] = useState(false);
   //Pagination
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
 
    useEffect(() => {
+    setLoading(true);
     upcomingPeople({page, pageSize, sortBy, searchBy})
       .then(data => {
         setPeople(data.data);
         setTotalCount(data.totalCount);
       })
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false));
   }, [page, sortBy, searchBy]);
 
   const totalPages = Math.ceil(totalCount / pageSize);
@@ -68,7 +72,10 @@ const Home = () => {
               onChange={e => setSearch(e.target.value)} 
             /> 
         </label>
-      </div>     
+      </div>  
+      {loading ? (
+        <div className="skeleton-row"></div>
+      ) : (  
         <table>
           <thead>
             <tr>
@@ -95,6 +102,7 @@ const Home = () => {
             ))}
           </tbody>
         </table>
+      )}
       <div className="pagination">
         <button
           className="icon-button"

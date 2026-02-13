@@ -5,7 +5,7 @@ namespace CongratulatorSPA.Server.Models
 {
     public class PersonModel
     {
-        public Guid Guid { get; set; } = Guid.NewGuid();
+        public Guid Guid { get; set; }
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public RelationshipType RelationshipType { get; set; }

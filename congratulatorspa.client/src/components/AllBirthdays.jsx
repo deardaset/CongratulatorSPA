@@ -12,6 +12,8 @@ const AllBirthdays = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [sortBy, setSortBy] = useState('name');
     const [searchBy, setSearch] = useState('');
+    //Loading
+    const [loading, setLoading] = useState(false);
     //CreateForm
     const [createForm, setCreateForm] = useState(false);
     //EditForm
@@ -22,12 +24,14 @@ const AllBirthdays = () => {
     const [deletingGuid, setDeletingGuid] = useState(null);
 
     const reloadPeople = () => {
+      setLoading(true);
       getPeople({page, pageSize, sortBy, searchBy})
         .then(data => {
         setPeople(data.data);
         setTotalCount(data.totalCount);
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
+        .finally(() => setLoading(false));        
       setCreateForm(false);
       setEditForm(false);
       setDeleteForm(false);
@@ -76,6 +80,9 @@ const AllBirthdays = () => {
         </div>
       )}
 {/*MainTable*/}
+      {loading ? (
+        <div className="skeleton-row"></div>
+      ) : (
       <table>
         <thead>
           <tr>
@@ -158,6 +165,7 @@ const AllBirthdays = () => {
           ))}
         </tbody>
       </table>
+      )}
       <div className="pagination">
         <button
           className="icon-button"

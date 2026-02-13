@@ -1,4 +1,6 @@
-﻿using CongratulatorSPA.Server.Exceptions;
+﻿using AutoMapper;
+using CongratulatorSPA.Server.Entities;
+using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Interfaces.Services;
 using CongratulatorSPA.Server.Models.Requests;
@@ -7,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace CongratulatorSPA.Server.Services
 {
-    public class UpdatePersonService(IPersonRepository repository, IStorageService storage) : IUpdatePersonService
+    public class UpdatePersonService(IPersonRepository repository, IStorageService storage, IMapper mapper) : IUpdatePersonService
     {
         public async Task<PersonResponse> RunAsync(Guid guid, UpdatePersonRequest request)
         {
@@ -38,7 +40,7 @@ namespace CongratulatorSPA.Server.Services
             
             if (hasChanges)
             {
-                await repository.UpdatePersonAsync(person);
+                await repository.UpdatePersonAsync(mapper.Map<Person>(person));
             }
 
             return new PersonResponse

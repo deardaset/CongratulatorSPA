@@ -1,13 +1,15 @@
-﻿using CongratulatorSPA.Server.Data;
+﻿using AutoMapper;
+using CongratulatorSPA.Server.Data;
 using CongratulatorSPA.Server.Entities;
 using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
+using CongratulatorSPA.Server.Models;
 using CongratulatorSPA.Server.Models.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace CongratulatorSPA.Server.Repositories
 {
-    public class PersonRepository(AppDbContext context) : IPersonRepository
+    public class PersonRepository(AppDbContext context, IMapper mapper) : IPersonRepository
     {
         public async Task CreatePersonAsync(Person person)
         {
@@ -21,20 +23,20 @@ namespace CongratulatorSPA.Server.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<(List<Person>, int totalCount)> GetAllPeopleAsync()
+        public async Task<(List<PersonModel>, int totalCount)> GetAllPeopleAsync()
         {
             var query = context.People.AsQueryable();
 
             var totalCount = query.Count();
 
-            var people = await query.ToListAsync();
+            var people = mapper.Map<List<PersonModel>>(await query.ToListAsync());
 
             return (people, totalCount);
         }
         
-        public async Task<Person> GetPersonByIdAsync(Guid guid)
+        public async Task<PersonModel> GetPersonByIdAsync(Guid guid)
         {
-            var person = await context.People.FirstOrDefaultAsync(p => p.Guid == guid);
+            var person = mapper.Map<PersonModel>(await context.People.FirstOrDefaultAsync(p => p.Guid == guid));
             if (person == null)
                 throw new NotFoundException("Person not found");
             return person;
