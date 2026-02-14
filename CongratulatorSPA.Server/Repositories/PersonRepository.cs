@@ -17,9 +17,9 @@ namespace CongratulatorSPA.Server.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task DeletePersonAsync(Person person)
+        public async Task DeletePersonAsync(PersonModel person)
         {
-            context.People.Remove(person);
+            context.People.Remove(mapper.Map<Person>(person));
             await context.SaveChangesAsync();
         }
 
@@ -27,7 +27,7 @@ namespace CongratulatorSPA.Server.Repositories
         {
             var query = context.People.AsQueryable();
 
-            var totalCount = query.Count();
+            var totalCount = await query.CountAsync();
 
             var people = mapper.Map<List<PersonModel>>(await query.ToListAsync());
 
@@ -42,9 +42,9 @@ namespace CongratulatorSPA.Server.Repositories
             return person;
         }
 
-        public async Task UpdatePersonAsync(Person person)
+        public async Task UpdatePersonAsync(PersonModel person)
         {
-            context.People.Update(person);
+            context.People.Update(mapper.Map<Person>(person));
             await context.SaveChangesAsync();
         }
     }

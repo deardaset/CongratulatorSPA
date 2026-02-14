@@ -10,8 +10,7 @@ namespace CongratulatorSPA.Server.Services
     {
         public async Task<PersonModel> RunAsync(Guid guid)
         {
-            var person = await repository.GetPersonByIdAsync(guid);
-            return person;
+            return await repository.GetPersonByIdAsync(guid);
         }
     }
 }

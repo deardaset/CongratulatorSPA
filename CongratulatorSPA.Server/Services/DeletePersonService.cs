@@ -6,7 +6,7 @@ using CongratulatorSPA.Server.Interfaces.Services;
 
 namespace CongratulatorSPA.Server.Services
 {
-    public class DeletePersonService(IPersonRepository repository, IStorageService storage, IMapper mapper) : IDeletePersonService
+    public class DeletePersonService(IPersonRepository repository, IStorageService storage) : IDeletePersonService
     {
         public async Task RunAsync(Guid guid)
         {
@@ -17,7 +17,7 @@ namespace CongratulatorSPA.Server.Services
             if (person.PhotoUrl != "https://storage.yandexcloud.net/congratulator-photos/default.png")
                 await storage.DeletePhotoAsync(person.PhotoUrl);
 
-            await repository.DeletePersonAsync(mapper.Map<Person>(person));
+            await repository.DeletePersonAsync(person);
         }
     }
 }

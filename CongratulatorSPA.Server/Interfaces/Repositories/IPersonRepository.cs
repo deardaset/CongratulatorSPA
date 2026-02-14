@@ -10,7 +10,7 @@ namespace CongratulatorSPA.Server.Interfaces.Repositories
         public Task CreatePersonAsync(Person person);
         public Task<(List<PersonModel>, int totalCount)> GetAllPeopleAsync();
         public Task<PersonModel> GetPersonByIdAsync(Guid guid);
-        public Task UpdatePersonAsync(Person person);
-        public Task DeletePersonAsync(Person person);
+        public Task UpdatePersonAsync(PersonModel person);
+        public Task DeletePersonAsync(PersonModel person);
     }
 }
