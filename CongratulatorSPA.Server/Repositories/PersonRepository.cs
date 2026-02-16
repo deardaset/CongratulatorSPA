@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CongratulatorSPA.Server.Repositories
 {
-    public class PersonRepository(AppDbContext context, IMapper mapper) : IPersonRepository
+    public class PersonRepository(AppDbContext context) : IPersonRepository
     {
         public async Task CreatePersonAsync(Person person)
         {
@@ -17,34 +17,32 @@ namespace CongratulatorSPA.Server.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task DeletePersonAsync(PersonModel person)
+        public async Task DeletePersonAsync(Person person)
         {
-            context.People.Remove(mapper.Map<Person>(person));
+            context.People.Remove(person);
             await context.SaveChangesAsync();
         }
 
-        public async Task<(List<PersonModel>, int totalCount)> GetAllPeopleAsync()
+        public async Task<(List<Person>, int totalCount)> GetAllPeopleAsync()
         {
             var query = context.People.AsQueryable();
 
             var totalCount = await query.CountAsync();
 
-            var people = mapper.Map<List<PersonModel>>(await query.ToListAsync());
+            var people = await query.ToListAsync();
 
             return (people, totalCount);
         }
         
-        public async Task<PersonModel> GetPersonByIdAsync(Guid guid)
+        public async Task<Person> GetPersonByIdAsync(Guid guid)
         {
-            var person = mapper.Map<PersonModel>(await context.People.FirstOrDefaultAsync(p => p.Guid == guid));
-            if (person == null)
-                throw new NotFoundException("Person not found");
-            return person;
+            var person = await context.People.FirstOrDefaultAsync(p => p.Guid == guid);
+            return person ?? throw new NotFoundException("Person not found");
         }
 
-        public async Task UpdatePersonAsync(PersonModel person)
+        public async Task UpdatePersonAsync(Person person)
         {
-            context.People.Update(mapper.Map<Person>(person));
+            context.People.Update(person);
             await context.SaveChangesAsync();
         }
     }

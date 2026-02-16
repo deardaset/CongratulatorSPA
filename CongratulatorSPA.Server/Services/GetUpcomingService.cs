@@ -1,12 +1,14 @@
-﻿using CongratulatorSPA.Server.Exceptions;
+﻿using AutoMapper;
+using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Interfaces.Services;
+using CongratulatorSPA.Server.Models;
 using CongratulatorSPA.Server.Models.Requests;
 using CongratulatorSPA.Server.Models.Responses;
 
 namespace CongratulatorSPA.Server.Services
 {
-    public class GetUpcomingService(IPersonRepository repository) : IGetUpcomingService<PersonResponse>
+    public class GetUpcomingService(IPersonRepository repository, IMapper mapper) : IGetUpcomingService<PersonResponse>
     {
         const int ADD_DAYS = 30;
         public async Task<PagedResponse<PersonResponse>> RunAsync(GetPeopleOptionsRequest request)
@@ -15,16 +17,17 @@ namespace CongratulatorSPA.Server.Services
                 throw new BadRequestException("Invalid pagination parameters");
 
             var (people, totalCount) = await repository.GetAllPeopleAsync();
+            var peopleModels = mapper.Map<List<PersonModel>>(people);
 
             var sortBy = request.SortBy?.ToLower() ?? string.Empty;
 
             var sortedPeople = sortBy switch
             {
-                "name" => people.OrderBy(p => p.Name),
-                "birthdate" => people.OrderBy(p => p.NextBirthday),
-                "age" => people.OrderBy(p => p.Age),
-                "relationship" => people.OrderBy(p => p.RelationshipType),
-                _ => people.OrderBy(p => p.Name)
+                "name" => peopleModels.OrderBy(p => p.Name),
+                "birthdate" => peopleModels.OrderBy(p => p.NextBirthday),
+                "age" => peopleModels.OrderBy(p => p.Age),
+                "relationship" => peopleModels.OrderBy(p => p.RelationshipType),
+                _ => peopleModels.OrderBy(p => p.Name)
             };
 
             var searchedPeople = sortedPeople.Where(p =>
