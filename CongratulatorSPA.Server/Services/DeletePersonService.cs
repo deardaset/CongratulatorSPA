@@ -12,7 +12,7 @@ namespace CongratulatorSPA.Server.Services
         {
             var person = await repository.GetPersonByIdAsync(guid);
             if (person == null)
-                throw new NotFoundException("Person not found");
+                throw new PersonNotFoundException("Person not found");
 
             if (person.PhotoUrl != "https://storage.yandexcloud.net/congratulator-photos/default.png")
                 await storage.DeletePhotoAsync(person.PhotoUrl);

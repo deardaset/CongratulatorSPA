@@ -57,7 +57,6 @@ builder.Services.AddScoped<IUpdatePersonService, UpdatePersonService>();
 builder.Services.AddScoped<IDeletePersonService, DeletePersonService>();
 builder.Services.AddScoped<IGetPersonService, GetPersonService>();
 builder.Services.AddScoped<IGetPeopleService<PersonResponse>, GetPeopleService>();
-builder.Services.AddScoped<IGetUpcomingService<PersonResponse>, GetUpcomingService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<PersonProfile>());

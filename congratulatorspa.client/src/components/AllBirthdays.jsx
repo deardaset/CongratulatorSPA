@@ -7,11 +7,13 @@ import DeleteConfirm from './DeleteConfirm'
 
 const AllBirthdays = () => {
     const [people, setPeople] = useState([]);
+    //Pagination sort and search
     const [page, setPage] = useState(1);
     const [pageSize] = useState(10);
     const [totalCount, setTotalCount] = useState(0);
     const [sortBy, setSortBy] = useState('name');
     const [searchBy, setSearch] = useState('');
+    const [upcoming] = useState(false);
     //Loading
     const [loading, setLoading] = useState(false);
     //CreateForm
@@ -25,7 +27,7 @@ const AllBirthdays = () => {
 
     const reloadPeople = () => {
       setLoading(true);
-      getPeople({page, pageSize, sortBy, searchBy})
+      getPeople({page, pageSize, sortBy, searchBy, upcoming})
         .then(data => {
         setPeople(data.data);
         setTotalCount(data.totalCount);
@@ -56,7 +58,7 @@ const AllBirthdays = () => {
             Sort by:{' '}
             <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
                 <option value="name">Name</option>
-                <option value="birthdate">Birthdate</option>
+                <option value="nextbirthday">Nextbirthday</option>
                 <option value="age">Age</option>
                 <option value="relationship">Relationship</option>
             </select>

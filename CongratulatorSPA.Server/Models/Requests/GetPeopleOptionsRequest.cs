@@ -6,5 +6,6 @@
         public int PageSize { get; set; } = 10;
         public string? SortBy { get; set; }
         public string? SearchBy { get; set; }
+        public bool Upcoming { get; set; }
     }
 }

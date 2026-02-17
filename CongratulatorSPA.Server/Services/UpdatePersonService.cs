@@ -15,7 +15,7 @@ namespace CongratulatorSPA.Server.Services
         {
             var person = await repository.GetPersonByIdAsync(guid);
             if (person == null)
-                throw new NotFoundException("Person not found");
+                throw new PersonNotFoundException("Person not found");
 
             string? photoUrl = null;
 

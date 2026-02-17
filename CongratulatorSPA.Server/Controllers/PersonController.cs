@@ -53,12 +53,5 @@ namespace CongratulatorSPA.Server.Controllers
             var result = await service.RunAsync(request);
             return Ok(result);
         }
-
-        [HttpGet("main")]
-        public async Task<IActionResult> GetUpcomingAsync([FromServices] IGetUpcomingService<PersonResponse> service, [FromQuery] GetPeopleOptionsRequest request)
-        {
-            var result = await service.RunAsync(request);
-            return Ok(result);
-        }
     }
 }

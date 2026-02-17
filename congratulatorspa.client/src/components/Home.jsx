@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { upcomingPeople } from "../api/personApi";
+import { getPeople } from "../api/personApi";
 
 function calculateDaysToBirthday(birthDate) {
   var result = '';
@@ -28,18 +28,19 @@ function calculateDaysToBirthday(birthDate) {
 
 const Home = () => {
   const [people, setPeople] = useState([]);
-  const [sortBy, setSortBy] = useState('birthdate');
-  const [searchBy, setSearch] = useState('');
-  //Loading
-  const [loading, setLoading] = useState(false);
-  //Pagination
+  //Pagination sort and search
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
-
+  const [sortBy, setSortBy] = useState('nextbirthday');
+  const [searchBy, setSearch] = useState('');
+  const [upcoming] = useState(true);
+  //Loading
+  const [loading, setLoading] = useState(false);
+  
    useEffect(() => {
     setLoading(true);
-    upcomingPeople({page, pageSize, sortBy, searchBy})
+    getPeople({page, pageSize, sortBy, searchBy, upcoming})
       .then(data => {
         setPeople(data.data);
         setTotalCount(data.totalCount);
@@ -58,7 +59,7 @@ const Home = () => {
             Sort by:{' '}
             <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
                 <option value="name">Name</option>
-                <option value="birthdate">Birthdate</option>
+                <option value="nextbirthday">Nextbirthday</option>
                 <option value="age">Age</option>
                 <option value="relationship">Relationship</option>
             </select>

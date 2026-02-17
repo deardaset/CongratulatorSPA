@@ -13,7 +13,7 @@ const Header = () => {
                 </div>
                 <div className="nav-right">
                     <ul className="nav-list">
-                        <li><Link to="/birthdays/all">All birthdays</Link></li>
+                        <li><Link to="/allbirthdays">All birthdays</Link></li>
                     </ul>
                 </div>
             </nav>        

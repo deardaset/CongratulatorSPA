@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Amazon.Runtime.Internal;
+using AutoMapper;
 using CongratulatorSPA.Server.Entities;
 using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
@@ -18,36 +19,12 @@ namespace CongratulatorSPA.Server.Services
             if (request.Page <= 0 || request.PageSize <= 0)
                 throw new BadRequestException("Invalid pagination parameters");
 
-            var (people, totalCount) = await repository.GetAllPeopleAsync();
+            var (people, totalCount) = await repository.GetAllPeopleAsync(request.Page, request.PageSize, request.SearchBy, request.SortBy, request.Upcoming);
             var peopleModels = mapper.Map<List<PersonModel>>(people);
-
-            var sortBy = request.SortBy?.ToLower() ?? string.Empty;
-
-            var sortedPeople = sortBy switch
-            {
-                "name" => peopleModels.OrderBy(p => p.Name),
-                "birthdate" => peopleModels.OrderBy(p => p.NextBirthday),
-                "age" => peopleModels.OrderBy(p => p.Age),
-                "relationship" => peopleModels.OrderBy(p => p.RelationshipType),
-                _ => peopleModels.OrderBy(p => p.Name)
-            };
-
-            var searchedPeople = sortedPeople.Where(p =>
-                string.IsNullOrWhiteSpace(request.SearchBy) ||
-                p.Name.Contains(request.SearchBy, StringComparison.OrdinalIgnoreCase) ||
-                p.RelationshipType.ToString().Contains(request.SearchBy ?? string.Empty, StringComparison.OrdinalIgnoreCase)
-            );
-
-            var filteredPeople = searchedPeople.ToList();
-
-            var paginatedPeople = searchedPeople
-                .Skip((request.Page - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .ToList();
 
             return new PagedResponse<PersonResponse>
             {
-                Data = paginatedPeople.Select(p => new PersonResponse
+                Data = peopleModels.Select(p => new PersonResponse
                 {
                     Guid = p.Guid,
                     Name = p.Name,
@@ -56,7 +33,7 @@ namespace CongratulatorSPA.Server.Services
                     PhotoUrl = p.PhotoUrl,
                     Age = p.Age
                 }).ToList(),
-                TotalCount = filteredPeople.Count,
+                TotalCount = totalCount,
                 Page = request.Page,
                 PageSize = request.PageSize
             };

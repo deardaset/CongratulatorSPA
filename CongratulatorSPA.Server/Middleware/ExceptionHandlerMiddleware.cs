@@ -18,7 +18,7 @@ namespace CongratulatorSPA.Server.Middleware
                     error = ex.Message
                 });
             }
-            catch (NotFoundException ex)
+            catch (PersonNotFoundException ex)
             {
                 context.Response.StatusCode = ex.StatusCode;
                 await context.Response.WriteAsJsonAsync(new
