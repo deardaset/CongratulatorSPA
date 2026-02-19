@@ -23,12 +23,12 @@ const EditForm = ({ person, onCancel, onSaved }) => {
       formData.append('birthDate', form.birthDate);
       formData.append('relationshipType', form.relationshipType);
       if (form.photo) {
-        formData.append('photo', form.photo); // добавляем файл, если выбран
+        formData.append('photo', form.photo); // adding file, if selected
       }
 
       await updatePerson(person.guid, formData);
-      onSaved();   // обновляем список
-      onCancel();  // закрываем форму
+      onSaved();   // update list
+      onCancel();  // close form
     } catch (err) {
       setErrors(err.messages || [err.message]);
     }

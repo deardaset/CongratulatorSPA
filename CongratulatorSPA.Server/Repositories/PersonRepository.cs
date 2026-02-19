@@ -58,10 +58,12 @@ namespace CongratulatorSPA.Server.Repositories
         {
             if (!string.IsNullOrEmpty(search))
             {
-                search = search.ToLower();
+                var term = $"%{search.Trim()}%";
+
                 query = query.Where(p =>
-                    p.Name.ToLower().Contains(search) ||
-                    p.RelationshipType.ToString().ToLower().Contains(search));
+                    EF.Functions.ILike(p.Name, term) ||
+                    EF.Functions.ILike(p.RelationshipType.ToString(), term)
+                );
             }
 
             var today = DateTime.Today;
