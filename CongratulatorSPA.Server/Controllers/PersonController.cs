@@ -1,5 +1,6 @@
 ﻿using CongratulatorSPA.Server.Entities;
 using CongratulatorSPA.Server.Interfaces.Services;
+using CongratulatorSPA.Server.Models;
 using CongratulatorSPA.Server.Models.Requests;
 using CongratulatorSPA.Server.Models.Responses;
 using CongratulatorSPA.Server.Services;
@@ -38,7 +39,7 @@ namespace CongratulatorSPA.Server.Controllers
 
         [HttpGet]
         [Route("{guid}")]
-        public async Task<Person> GetPersonAsync([FromRoute] Guid guid, [FromServices] IGetPersonService service)
+        public async Task<PersonModel> GetPersonAsync([FromRoute] Guid guid, [FromServices] IGetPersonService service)
         {
             var result = await service.RunAsync(guid);
             return result;
@@ -48,13 +49,6 @@ namespace CongratulatorSPA.Server.Controllers
         public async Task<IActionResult> GetPeopleAsync(
             [FromServices] IGetPeopleService<PersonResponse> service,
             [FromQuery] GetPeopleOptionsRequest request)
-        {
-            var result = await service.RunAsync(request);
-            return Ok(result);
-        }
-
-        [HttpGet("main")]
-        public async Task<IActionResult> GetUpcomingAsync([FromServices] IGetUpcomingService<PersonResponse> service, [FromQuery] GetPeopleOptionsRequest request)
         {
             var result = await service.RunAsync(request);
             return Ok(result);

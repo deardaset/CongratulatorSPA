@@ -1,4 +1,6 @@
-﻿using CongratulatorSPA.Server.Exceptions;
+﻿using AutoMapper;
+using CongratulatorSPA.Server.Entities;
+using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Interfaces.Services;
 using CongratulatorSPA.Server.Models.Requests;
@@ -13,7 +15,7 @@ namespace CongratulatorSPA.Server.Services
         {
             var person = await repository.GetPersonByIdAsync(guid);
             if (person == null)
-                throw new NotFoundException("Person not found");
+                throw new PersonNotFoundException("Person not found");
 
             string? photoUrl = null;
 

@@ -1,7 +1,8 @@
+using CongratulatorSPA.Server.AutoMapperProfiles;
 using CongratulatorSPA.Server.Data;
+using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Interfaces.Services;
-using CongratulatorSPA.Server.Middleware;
 using CongratulatorSPA.Server.Models.Responses;
 using CongratulatorSPA.Server.Repositories;
 using CongratulatorSPA.Server.Services;
@@ -27,26 +28,6 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreatePersonValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdatePersonValidator>();
 
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.InvalidModelStateResponseFactory = context =>
-    {
-        var errors = context.ModelState
-            .Where(x => x.Value.Errors.Count > 0)
-            .SelectMany(x => x.Value.Errors)
-            .Select(e => e.ErrorMessage)
-            .ToList();
-
-        return new JsonResult(new
-        {
-            error = string.Join("; ", errors)
-        })
-        {
-            StatusCode = StatusCodes.Status400BadRequest
-        };
-    };
-});
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -56,8 +37,12 @@ builder.Services.AddScoped<IUpdatePersonService, UpdatePersonService>();
 builder.Services.AddScoped<IDeletePersonService, DeletePersonService>();
 builder.Services.AddScoped<IGetPersonService, GetPersonService>();
 builder.Services.AddScoped<IGetPeopleService<PersonResponse>, GetPeopleService>();
-builder.Services.AddScoped<IGetUpcomingService<PersonResponse>, GetUpcomingService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
+
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<PersonProfile>());
+
+builder.Services.AddExceptionHandler<CongratulatorExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -77,7 +62,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseExceptionHandler();
 
 app.MapControllers();
 

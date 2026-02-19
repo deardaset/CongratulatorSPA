@@ -7,11 +7,15 @@ import DeleteConfirm from './DeleteConfirm'
 
 const AllBirthdays = () => {
     const [people, setPeople] = useState([]);
+    //Pagination sort and search
     const [page, setPage] = useState(1);
     const [pageSize] = useState(10);
     const [totalCount, setTotalCount] = useState(0);
     const [sortBy, setSortBy] = useState('name');
     const [searchBy, setSearch] = useState('');
+    const [upcoming] = useState(false);
+    //Loading
+    const [loading, setLoading] = useState(false);
     //CreateForm
     const [createForm, setCreateForm] = useState(false);
     //EditForm
@@ -22,12 +26,14 @@ const AllBirthdays = () => {
     const [deletingGuid, setDeletingGuid] = useState(null);
 
     const reloadPeople = () => {
-      getPeople({page, pageSize, sortBy, searchBy})
+      setLoading(true);
+      getPeople({page, pageSize, sortBy, searchBy, upcoming})
         .then(data => {
         setPeople(data.data);
         setTotalCount(data.totalCount);
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
+        .finally(() => setLoading(false));        
       setCreateForm(false);
       setEditForm(false);
       setDeleteForm(false);
@@ -52,7 +58,7 @@ const AllBirthdays = () => {
             Sort by:{' '}
             <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
                 <option value="name">Name</option>
-                <option value="birthdate">Birthdate</option>
+                <option value="nextbirthday">Nextbirthday</option>
                 <option value="age">Age</option>
                 <option value="relationship">Relationship</option>
             </select>
@@ -76,6 +82,9 @@ const AllBirthdays = () => {
         </div>
       )}
 {/*MainTable*/}
+      {loading ? (
+        <div className="skeleton-row"></div>
+      ) : (
       <table>
         <thead>
           <tr>
@@ -158,6 +167,7 @@ const AllBirthdays = () => {
           ))}
         </tbody>
       </table>
+      )}
       <div className="pagination">
         <button
           className="icon-button"

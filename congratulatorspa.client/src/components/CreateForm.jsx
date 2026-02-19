@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createPerson } from '../api/personApi';
 
 const CreateForm = ({ onCreated, onCancel }) => {
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState(null);
   const [form, setForm] = useState({
     name: '',
     birthDate: '',
@@ -33,7 +33,7 @@ const CreateForm = ({ onCreated, onCancel }) => {
       onCreated();
       onCancel();
     } catch (err) {
-      setError(err.message);
+      setErrors(err.messages || [err.message]);
     }
   }
 return (
@@ -94,9 +94,9 @@ return (
           Cancel
         </button>
       </div>
-      {error && (
+      {errors && (
         <div className="form-error">
-          {error}
+          {errors.map((e, i) => <p key={i}>{e}</p>)}
         </div>
       )}
     </form>
