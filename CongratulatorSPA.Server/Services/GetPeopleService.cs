@@ -19,7 +19,7 @@ namespace CongratulatorSPA.Server.Services
             if (request.Page <= 0 || request.PageSize <= 0)
                 throw new BadRequestException("Invalid pagination parameters");
 
-            var (people, totalCount) = await repository.GetAllPeopleAsync(request.Page, request.PageSize, request.SearchBy, request.SortBy, request.Upcoming);
+            var (people, totalCount) = await repository.GetAllPeopleAsync(request);
             var peopleModels = mapper.Map<List<PersonModel>>(people);
 
             return new PagedResponse<PersonResponse>

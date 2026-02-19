@@ -7,6 +7,7 @@ using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Models;
 using CongratulatorSPA.Server.Models.Requests;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace CongratulatorSPA.Server.Repositories
 {
@@ -24,19 +25,19 @@ namespace CongratulatorSPA.Server.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<(List<Person>, int totalCount)> GetAllPeopleAsync(int page, int pageSize, string? search, string? sort, bool upcoming)
+        public async Task<(List<Person>, int totalCount)> GetAllPeopleAsync(GetPeopleOptionsRequest request)
         {
             var query = context.People.AsQueryable();
 
-            query = ApplyFilters(query, search, sort);
-            if (upcoming)
+            query = ApplyFilters(query, request.SearchBy, request.SortBy);
+            if (request.Upcoming)
                 query = IsUpcoming(query);
 
             var totalCount = await query.CountAsync();
 
             var people = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((request.Page - 1) * request.PageSize)
+                .Take(request.PageSize)
                 .ToListAsync();
 
             return (people, totalCount);
