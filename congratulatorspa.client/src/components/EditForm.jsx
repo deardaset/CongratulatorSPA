@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { updatePerson } from '../api/personApi';
 
 const EditForm = ({ person, onCancel, onSaved }) => {
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState(null);
   const [form, setForm] = useState({
     name: person.name,
     birthDate: person.birthDate.split('T')[0],
     relationshipType: person.relationshipType,
-    photo: null
+    photo: person.photoUrl.split("/").pop()
   });
 
   const handleChange = e => {
@@ -30,7 +30,7 @@ const EditForm = ({ person, onCancel, onSaved }) => {
       onSaved();   // обновляем список
       onCancel();  // закрываем форму
     } catch (err) {
-      setError(err.message);
+      setErrors(err.messages || [err.message]);
     }
   };
 
@@ -74,7 +74,7 @@ const EditForm = ({ person, onCancel, onSaved }) => {
       </label>
 
       {form.photo && (
-        <span className="file-name">{form.photo.name}</span>
+        <span className="file-name">{form.photo instanceof File ? form.photo.name : form.photo}</span>
       )}
 
       <div className="form-actions">
@@ -83,9 +83,9 @@ const EditForm = ({ person, onCancel, onSaved }) => {
           Cancel
         </button>
       </div>
-      {error && (
+      {errors && (
         <div className="form-error">
-          {error}
+          {errors.map((e, i) => <p key={i}>{e}</p>)}
         </div>
       )}
     </form>

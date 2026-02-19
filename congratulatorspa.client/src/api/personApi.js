@@ -11,8 +11,13 @@ export async function getPeople({page = 1, pageSize = 10, sortBy, searchBy, upco
   const response = await fetch(`/api/person?${params.toString()}`);
 
   if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.error || 'Unknown error');
+    const jsonError = await response.json();
+    if (jsonError.errors) {
+      const messages = Object.values(jsonError.errors).flat();
+      const error = new Error("Validation failed")
+      error.messages = messages;
+      throw error;
+    }
   }
   
   return response.json();
@@ -26,7 +31,12 @@ export async function createPerson(formData) {
 
   if (!response.ok) {
     const jsonError = await response.json();
-    throw new Error(jsonError.error || 'Unknown error')
+    if (jsonError.errors) {
+      const messages = Object.values(jsonError.errors).flat();
+      const error = new Error("Validation failed")
+      error.messages = messages;
+      throw error;
+    }
   }
 }
 
@@ -38,7 +48,12 @@ export async function updatePerson(guid, formData) {
 
   if (!response.ok) {
     const jsonError = await response.json();
-    throw new Error(jsonError.error || 'Unknown error');
+    if (jsonError.errors) {
+      const messages = Object.values(jsonError.errors).flat();
+      const error = new Error("Validation failed")
+      error.messages = messages;
+      throw error;
+    }
   }
 }
 
@@ -49,6 +64,11 @@ export async function deletePerson(guid) {
 
   if (!response.ok) {
     const jsonError = await response.json();
-    throw new Error(jsonError.error || 'Unknown error')
+    if (jsonError.errors) {
+      const messages = Object.values(jsonError.errors).flat();
+      const error = new Error("Validation failed")
+      error.messages = messages;
+      throw error;
+    }
   }
 }

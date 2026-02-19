@@ -28,8 +28,7 @@ namespace CongratulatorSPA.Server.Repositories
         {
             var query = context.People.AsQueryable();
 
-            query = ApplySearch(query, search);
-            query = ApplySort(query, sort);    
+            query = ApplyFilters(query, search, sort);
             if (upcoming)
                 query = IsUpcoming(query);
 
@@ -55,7 +54,7 @@ namespace CongratulatorSPA.Server.Repositories
             await context.SaveChangesAsync();
         }
         //Additional
-        private static IQueryable<Person> ApplySearch(IQueryable<Person> query, string? search)
+        public static IQueryable<Person> ApplyFilters(IQueryable<Person> query, string? search, string? sort)
         {
             if (!string.IsNullOrEmpty(search))
             {
@@ -64,10 +63,7 @@ namespace CongratulatorSPA.Server.Repositories
                     p.Name.ToLower().Contains(search) ||
                     p.RelationshipType.ToString().ToLower().Contains(search));
             }
-            return query;
-        }
-        private static IQueryable<Person> ApplySort(IQueryable<Person> query, string? sort)
-        {
+
             var today = DateTime.Today;
 
             query = sort?.ToLower() switch
