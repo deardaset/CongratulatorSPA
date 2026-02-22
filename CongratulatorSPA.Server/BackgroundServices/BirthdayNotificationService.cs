@@ -25,15 +25,12 @@ namespace CongratulatorSPA.Server.BackgroundServices
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(person.Email))
-                    {
-                        await emailService.SendBirthdayAsync(person.Email!, person.Name, cancellationToken);
-                        logger.LogInformation($"Письмо отправлено {person.Name}");
-                    }                    
+                    await emailService.SendBirthdayAsync(person.Email!, person.Name, cancellationToken);
+                    logger.LogInformation("Письмо отправлено {Name}", person.Name);                   
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, $"Ошибка отправки письма {person.Name}");
+                    logger.LogError(ex, "Ошибка отправки письма {Name}", person.Name);
                 }
             }
         }

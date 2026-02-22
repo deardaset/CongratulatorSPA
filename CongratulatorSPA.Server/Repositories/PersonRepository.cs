@@ -34,6 +34,7 @@ namespace CongratulatorSPA.Server.Repositories
             var people = await query
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
+                .AsNoTracking()
                 .ToListAsync();
 
             return (people, totalCount);
@@ -42,9 +43,9 @@ namespace CongratulatorSPA.Server.Repositories
         public async Task<List<Person>> GetTodaysBirthdaysAsync(CancellationToken cancellationToken)
         {
             var today = DateTime.Today;
-            var query = context.People.Where(p => p.BirthDate.Month == today.Month && p.BirthDate.Day == today.Day);
+            var query = context.People.Where(p => p.BirthDate.Month == today.Month && p.BirthDate.Day == today.Day && !string.IsNullOrEmpty(p.Email));
 
-            return await query.ToListAsync(cancellationToken);
+            return await query.AsNoTracking().ToListAsync(cancellationToken);
         }
 
         public async Task<Person> GetPersonByIdAsync(Guid guid)
