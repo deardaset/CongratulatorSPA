@@ -9,6 +9,7 @@ namespace CongratulatorSPA.Server.Entities
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public RelationshipType RelationshipType { get; set; }
+        public string? Email {  get; set; }
         public string PhotoUrl { get; set; }
     }
 }

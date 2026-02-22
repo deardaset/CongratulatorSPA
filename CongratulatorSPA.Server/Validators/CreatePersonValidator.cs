@@ -18,6 +18,11 @@ namespace CongratulatorSPA.Server.Validators
                 .Must(BeValidBirthDate)
                 .WithMessage("Birthdate must be valid");
 
+            RuleFor(x => x.Email)
+                .EmailAddress().WithMessage("Email must be valid")
+                .MaximumLength(255).WithMessage("Email is too long")
+                .When(x => !string.IsNullOrEmpty(x.Email));
+
             RuleFor(x => x.Photo)
                 .Must(photo => photo == null || photo.ContentType.StartsWith("image/"))
                 .WithMessage("Only images allowed");

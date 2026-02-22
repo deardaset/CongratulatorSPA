@@ -1,13 +1,9 @@
-﻿using Amazon.Runtime.Internal;
-using AutoMapper;
-using CongratulatorSPA.Server.Data;
+﻿using CongratulatorSPA.Server.Data;
 using CongratulatorSPA.Server.Entities;
 using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
-using CongratulatorSPA.Server.Models;
 using CongratulatorSPA.Server.Models.Requests;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace CongratulatorSPA.Server.Repositories
 {
@@ -27,7 +23,7 @@ namespace CongratulatorSPA.Server.Repositories
 
         public async Task<(List<Person>, int totalCount)> GetAllPeopleAsync(GetPeopleOptionsRequest request)
         {
-            var query = context.People.AsQueryable();
+            var query = context.People.AsNoTracking().AsQueryable();
 
             query = ApplyFilters(query, request.SearchBy, request.SortBy);
             if (request.Upcoming)
@@ -43,6 +39,14 @@ namespace CongratulatorSPA.Server.Repositories
             return (people, totalCount);
         }
         
+        public async Task<List<Person>> GetTodaysBirthdaysAsync(CancellationToken cancellationToken)
+        {
+            var today = DateTime.Today;
+            var query = context.People.AsNoTracking().Where(p => p.BirthDate.Month == today.Month && p.BirthDate.Day == today.Day && !string.IsNullOrEmpty(p.Email));
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
         public async Task<Person> GetPersonByIdAsync(Guid guid)
         {
             var person = await context.People.FirstOrDefaultAsync(p => p.Guid == guid);
