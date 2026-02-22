@@ -42,9 +42,7 @@ namespace CongratulatorSPA.Server.Repositories
         public async Task<List<Person>> GetTodaysBirthdaysAsync(CancellationToken cancellationToken)
         {
             var today = DateTime.Today;
-            var query = context.People.AsQueryable();
-
-            query = query.Where(p => p.BirthDate.Month == today.Month && p.BirthDate.Day == today.Day);
+            var query = context.People.Where(p => p.BirthDate.Month == today.Month && p.BirthDate.Day == today.Day);
 
             return await query.ToListAsync(cancellationToken);
         }
