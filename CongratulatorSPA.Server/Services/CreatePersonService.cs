@@ -31,7 +31,8 @@ namespace CongratulatorSPA.Server.Services
                 Name = request.Name,
                 BirthDate = request.BirthDate,
                 RelationshipType = request.RelationshipType,
-                PhotoUrl = photoUrl
+                PhotoUrl = photoUrl,
+                Email = request.Email
             };
             await repository.CreatePersonAsync(person);
 

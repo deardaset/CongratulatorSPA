@@ -7,6 +7,7 @@ const CreateForm = ({ onCreated, onCancel }) => {
     name: '',
     birthDate: '',
     relationshipType: '',
+    email: '',
     photo: null
   });
   const handleChange = (e) => {
@@ -25,6 +26,7 @@ const CreateForm = ({ onCreated, onCancel }) => {
       formData.append('name', form.name);
       formData.append('birthDate', form.birthDate);
       formData.append('relationshipType', form.relationshipType);
+      formData.append('email', form.email);
       if (form.photo != null) {
         formData.append('photo', form.photo); // файл добавляется сюда
       }
@@ -68,6 +70,14 @@ return (
         <option value="Relative">Relative</option>
         <option value="Coworker">Coworker</option>
       </select>
+
+      <input 
+        type="text"
+        name="email"
+        value={form.email}
+        placeholder='Email'
+        onChange={handleChange} 
+      />
 
       <label className="file-upload">
         Upload photo

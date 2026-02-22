@@ -1,4 +1,5 @@
 using CongratulatorSPA.Server.AutoMapperProfiles;
+using CongratulatorSPA.Server.BackgroundServices;
 using CongratulatorSPA.Server.Data;
 using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
@@ -24,13 +25,16 @@ builder.Services.AddControllers()
                     new JsonStringEnumConverter());
     });
 
+//FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreatePersonValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdatePersonValidator>();
 
+//DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Services
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<ICreatePersonService, CreatePersonService>();
 builder.Services.AddScoped<IUpdatePersonService, UpdatePersonService>();
@@ -38,9 +42,15 @@ builder.Services.AddScoped<IDeletePersonService, DeletePersonService>();
 builder.Services.AddScoped<IGetPersonService, GetPersonService>();
 builder.Services.AddScoped<IGetPeopleService<PersonResponse>, GetPeopleService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
+//BackgroundService
+builder.Services.AddHostedService<BirthdayNotificationService>();
+
+//AutoMapper
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<PersonProfile>());
 
+//ExceptionHandler
 builder.Services.AddExceptionHandler<CongratulatorExceptionHandler>();
 builder.Services.AddProblemDetails();
 
