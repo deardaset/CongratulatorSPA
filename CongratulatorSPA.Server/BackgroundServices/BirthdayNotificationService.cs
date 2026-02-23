@@ -36,12 +36,12 @@ namespace CongratulatorSPA.Server.BackgroundServices
         }
         private async Task WaitUntilMorningAsync(CancellationToken cancellationToken)
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             var nextRun = DateTime.Today.AddHours(9);
             if (now > nextRun)
                 nextRun = nextRun.AddDays(1);
 
-            await Task.Delay(/*extRun - now*/TimeSpan.FromSeconds(10), cancellationToken);
+            await Task.Delay(nextRun - now, cancellationToken);
         }
     }
 }
