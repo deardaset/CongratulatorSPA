@@ -1,3 +1,5 @@
+import { resumeToPipeableStream } from "react-dom/server";
+
 export async function getPeople({page = 1, pageSize = 10, sortBy, searchBy, upcoming}) {
   const params = new URLSearchParams();
 
@@ -38,6 +40,8 @@ export async function createPerson(formData) {
       throw error;
     }
   }
+
+  return response.json();
 }
 
 export async function updatePerson(guid, formData) {
@@ -55,6 +59,8 @@ export async function updatePerson(guid, formData) {
       throw error;
     }
   }
+
+  return response.json();
 }
 
 export async function deletePerson(guid) {

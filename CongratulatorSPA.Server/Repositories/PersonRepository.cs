@@ -3,6 +3,8 @@ using CongratulatorSPA.Server.Entities;
 using CongratulatorSPA.Server.Exceptions;
 using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Models.Requests;
+using CongratulatorSPA.Server.Specifications;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 
 namespace CongratulatorSPA.Server.Repositories
@@ -25,9 +27,8 @@ namespace CongratulatorSPA.Server.Repositories
         {
             var query = context.People.AsNoTracking().AsQueryable();
 
-            query = ApplyFilters(query, request.SearchBy, request.SortBy);
-            if (request.Upcoming)
-                query = IsUpcoming(query);
+            var spec = new PersonFilterSpecification();
+            query = spec.Apply(query, request.SearchBy, request.SortBy, request.Upcoming);
 
             var totalCount = await query.CountAsync();
 
@@ -47,63 +48,15 @@ namespace CongratulatorSPA.Server.Repositories
             return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<Person> GetPersonByIdAsync(Guid guid)
+        public async Task<Person?> GetPersonByIdAsync(Guid guid)
         {
-            var person = await context.People.FirstOrDefaultAsync(p => p.Guid == guid);
-            return person ?? throw new PersonNotFoundException("Person not found");
+            return await context.People.FirstOrDefaultAsync(p => p.Guid == guid);
         }
 
         public async Task UpdatePersonAsync(Person person)
         {
             context.People.Update(person);
             await context.SaveChangesAsync();
-        }
-        //Additional
-        public static IQueryable<Person> ApplyFilters(IQueryable<Person> query, string? search, string? sort)
-        {
-            if (!string.IsNullOrEmpty(search))
-            {
-                var term = $"%{search.Trim()}%";
-
-                query = query.Where(p =>
-                    EF.Functions.ILike(p.Name, term) ||
-                    EF.Functions.ILike(p.RelationshipType.ToString(), term)
-                );
-            }
-
-            var today = DateTime.Today;
-
-            query = sort?.ToLower() switch
-            {
-                "name" => query.OrderBy(p => p.Name),
-                "age" => query.OrderBy(p => p.BirthDate),
-                "nextbirthday" => query.OrderBy(p =>
-                    new DateTime(today.Year, p.BirthDate.Month, p.BirthDate.Day) < today
-                        ? new DateTime(today.Year + 1, p.BirthDate.Month, p.BirthDate.Day)
-                        : new DateTime(today.Year, p.BirthDate.Month, p.BirthDate.Day)),
-                "relationship" => query.OrderBy(p => p.RelationshipType),
-                _ => query.OrderBy(p => p.Name)
-            };
-            return query;
-        }
-        private static IQueryable<Person> IsUpcoming(IQueryable<Person> query)
-        {
-            var today = DateTime.Today;
-            var endDate = today.AddDays(30);
-
-            return query.Where(p =>
-                (
-                    new DateTime(today.Year, p.BirthDate.Month, p.BirthDate.Day) < today
-                        ? new DateTime(today.Year + 1, p.BirthDate.Month, p.BirthDate.Day)
-                        : new DateTime(today.Year, p.BirthDate.Month, p.BirthDate.Day)
-                ) >= today
-                &&
-                (
-                    new DateTime(today.Year, p.BirthDate.Month, p.BirthDate.Day) < today
-                        ? new DateTime(today.Year + 1, p.BirthDate.Month, p.BirthDate.Day)
-                        : new DateTime(today.Year, p.BirthDate.Month, p.BirthDate.Day)
-                ) <= endDate
-            );
         }
     }
 }

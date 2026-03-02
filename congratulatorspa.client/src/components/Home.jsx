@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getPeople } from "../api/personApi";
+import { usePeople } from '../hooks/usePeople';
 
 function calculateDaysToBirthday(birthDate) {
   var result = '';
@@ -27,29 +28,8 @@ function calculateDaysToBirthday(birthDate) {
 };
 
 const Home = () => {
-  const [people, setPeople] = useState([]);
-  //Pagination sort and search
-  const [page, setPage] = useState(1);
-  const [pageSize] = useState(10);
-  const [totalCount, setTotalCount] = useState(0);
-  const [sortBy, setSortBy] = useState('nextbirthday');
-  const [searchBy, setSearch] = useState('');
-  const [upcoming] = useState(true);
-  //Loading
-  const [loading, setLoading] = useState(false);
-  
-   useEffect(() => {
-    setLoading(true);
-    getPeople({page, pageSize, sortBy, searchBy, upcoming})
-      .then(data => {
-        setPeople(data.data);
-        setTotalCount(data.totalCount);
-      })
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
-  }, [page, sortBy, searchBy]);
-
-  const totalPages = Math.ceil(totalCount / pageSize);
+  const {people, page, setPage, sortBy, setSortBy, searchBy, setSearch, loading, totalPages}
+    = usePeople({upcoming: true, defaultSortBy: 'nextbirthday'});
 
   return (
     <main className='container'>

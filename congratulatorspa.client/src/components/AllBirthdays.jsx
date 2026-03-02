@@ -1,21 +1,15 @@
 import { useState, useEffect } from 'react'
 import React from 'react'
 import { getPeople } from '../api/personApi'
+import { usePeople } from '../hooks/usePeople'
 import CreateForm from './CreateForm'
 import EditForm from './EditForm'
 import DeleteConfirm from './DeleteConfirm'
 
 const AllBirthdays = () => {
-    const [people, setPeople] = useState([]);
-    //Pagination sort and search
-    const [page, setPage] = useState(1);
-    const [pageSize] = useState(10);
-    const [totalCount, setTotalCount] = useState(0);
-    const [sortBy, setSortBy] = useState('name');
-    const [searchBy, setSearch] = useState('');
-    const [upcoming] = useState(false);
-    //Loading
-    const [loading, setLoading] = useState(false);
+    //People
+    const { people, page, setPage, sortBy, setSortBy, searchBy, setSearch, loading, totalPages, reload }
+      = usePeople({ upcoming: false, defaultSortBy: 'name' });
     //CreateForm
     const [createForm, setCreateForm] = useState(false);
     //EditForm
@@ -25,25 +19,16 @@ const AllBirthdays = () => {
     const [deleteForm, setDeleteForm] = useState(false);
     const [deletingGuid, setDeletingGuid] = useState(null);
 
-    const reloadPeople = () => {
-      setLoading(true);
-      getPeople({page, pageSize, sortBy, searchBy, upcoming})
-        .then(data => {
-        setPeople(data.data);
-        setTotalCount(data.totalCount);
-        })
-        .catch(err => console.error(err))
-        .finally(() => setLoading(false));        
+    const handleReload = () => {
+      reload();
       setCreateForm(false);
       setEditForm(false);
       setDeleteForm(false);
     };
   
     useEffect(() => {
-      reloadPeople();
+      handleReload();
     }, [page, sortBy, searchBy]);
-
-    const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <main className='container'>
@@ -78,7 +63,7 @@ const AllBirthdays = () => {
       {createForm && (
         <div className='create-form slide-down'>
           <h3>Create person</h3>
-          <CreateForm onCreated={reloadPeople} onCancel={() => setCreateForm(false)} />
+          <CreateForm onCreated={handleReload} onCancel={() => setCreateForm(false)} />
         </div>
       )}
 {/*MainTable*/}
@@ -142,7 +127,7 @@ const AllBirthdays = () => {
                         setEditingGuid(null)
                         setEditForm(false)
                       }}
-                      onSaved={reloadPeople}
+                      onSaved={handleReload}
                     />
                   </td>
                 </tr>
@@ -154,7 +139,7 @@ const AllBirthdays = () => {
                     <DeleteConfirm 
                       guid={p.guid}
                       name={p.name}                      
-                      onDeleted={reloadPeople}
+                      onDeleted={handleReload}
                       onCancel={() => {
                         setDeletingGuid(null)
                         setDeleteForm(false)
