@@ -9,15 +9,18 @@ using CongratulatorSPA.Server.Models.Responses;
 using CongratulatorSPA.Server.Repositories;
 using CongratulatorSPA.Server.Services;
 using CongratulatorSPA.Server.Validators;
+using EFCoreSecondLevelCacheInterceptor;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
-var builder = WebApplication.CreateBuilder(args);
+CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -31,9 +34,18 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreatePersonValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdatePersonValidator>();
 
+//Caching
+builder.Services.AddEFSecondLevelCache(options =>
+    options.UseMemoryCacheProvider()
+        .CacheAllQueries(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(5))
+        .ConfigureLogging(true)
+);
+
 //DbContext
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>((provider, options) =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .AddInterceptors(provider.GetRequiredService<SecondLevelCacheInterceptor>())
+);
 
 //Services
 builder.Services.AddApplicationServices();

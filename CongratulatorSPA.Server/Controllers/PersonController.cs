@@ -39,10 +39,10 @@ namespace CongratulatorSPA.Server.Controllers
 
         [HttpGet]
         [Route("{guid}")]
-        public async Task<PersonModel> GetPersonAsync([FromRoute] Guid guid, [FromServices] IGetPersonService service)
+        public async Task<IActionResult> GetPersonAsync([FromRoute] Guid guid, [FromServices] IGetPersonService service)
         {
             var result = await service.RunAsync(guid);
-            return result;
+            return Ok(result);
         }
 
         [HttpGet]

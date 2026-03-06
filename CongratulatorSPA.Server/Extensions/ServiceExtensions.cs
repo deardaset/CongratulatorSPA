@@ -4,6 +4,7 @@ using CongratulatorSPA.Server.Interfaces.Services;
 using CongratulatorSPA.Server.Models.Responses;
 using CongratulatorSPA.Server.Repositories;
 using CongratulatorSPA.Server.Services;
+using Quartz;
 
 namespace CongratulatorSPA.Server.Extensions
 {
@@ -12,17 +13,32 @@ namespace CongratulatorSPA.Server.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             //Services
-            services.AddScoped<IPersonRepository, PersonRepository>();
-            services.AddScoped<ICreatePersonService, CreatePersonService>();
-            services.AddScoped<IUpdatePersonService, UpdatePersonService>();
-            services.AddScoped<IDeletePersonService, DeletePersonService>();
-            services.AddScoped<IGetPersonService, GetPersonService>();
+            services.Scan(scan => scan
+                .FromAssemblyOf<PersonRepository>()
+                .AddClasses(classes => classes.InNamespaces(
+                    "CongratulatorSPA.Server.Services",
+                    "CongratulatorSPA.Server.Repositories"))
+                .AsMatchingInterface()
+            .WithScopedLifetime());
+
             services.AddScoped<IGetPeopleService<PersonResponse>, GetPeopleService>();
-            services.AddScoped<IStorageService, StorageService>();
-            services.AddScoped<IEmailService, EmailService>();
+            services.AddSingleton<IStorageService, StorageService>();
+            services.AddSingleton<IEmailService, EmailService>();
 
             //BackgroundService
-            services.AddHostedService<BirthdayNotificationService>();
+            services.AddQuartz(q =>
+            {
+                var jobKey = new JobKey("BirthdayNotification");
+                q.AddJob<BirthdayNotificationService>(options => options.WithIdentity(jobKey));
+
+                q.AddTrigger(options => options
+                    .ForJob(jobKey)
+                    .WithIdentity("BirthdayNotification-trigger")
+                    .WithCronSchedule("0 0 9 * * ?")
+                );
+            });
+
+            services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
             return services;
         }

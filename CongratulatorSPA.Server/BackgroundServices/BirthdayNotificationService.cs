@@ -1,47 +1,31 @@
 ﻿using CongratulatorSPA.Server.Interfaces.Repositories;
 using CongratulatorSPA.Server.Interfaces.Services;
+using Quartz;
 
 namespace CongratulatorSPA.Server.BackgroundServices
 {
-    public class BirthdayNotificationService(IServiceScopeFactory scopeFactory, ILogger<BirthdayNotificationService> logger) : BackgroundService
+    [DisallowConcurrentExecution]
+    public class BirthdayNotificationService(IPersonRepository repository, IEmailService emailService, ILogger<BirthdayNotificationService> logger) : IJob
     {
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+        public async Task Execute(IJobExecutionContext context)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            while (!context.CancellationToken.IsCancellationRequested)
             {
-                await WaitUntilMorningAsync(cancellationToken);
-                await SendNotificationsAsync(cancellationToken);
-            }
-        }
-        private async Task SendNotificationsAsync(CancellationToken cancellationToken)
-        {
-            using var scope = scopeFactory.CreateScope();
-            var repository = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
-            var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
+                var people = await repository.GetTodaysBirthdaysAsync(context.CancellationToken);
 
-            var people = await repository.GetTodaysBirthdaysAsync(cancellationToken);
-
-            foreach (var person in people)
-            {
-                try
+                foreach (var person in people)
                 {
-                    await emailService.SendBirthdayAsync(person.Email!, person.Name, cancellationToken);
-                    logger.LogInformation("Письмо отправлено {Name}", person.Name);                   
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "Ошибка отправки письма {Name}", person.Name);
+                    try
+                    {
+                        await emailService.SendBirthdayAsync(person.Email!, person.Name, context.CancellationToken);
+                        logger.LogInformation("Письмо отправлено {Name}", person.Name);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Ошибка отправки письма {Name}", person.Name);
+                    }
                 }
             }
-        }
-        private async Task WaitUntilMorningAsync(CancellationToken cancellationToken)
-        {
-            var now = DateTime.Now;
-            var nextRun = DateTime.Today.AddHours(9);
-            if (now > nextRun)
-                nextRun = nextRun.AddDays(1);
-
-            await Task.Delay(nextRun - now, cancellationToken);
         }
     }
 }
