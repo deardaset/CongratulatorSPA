@@ -5,7 +5,7 @@ namespace CongratulatorSPA.Server.Specifications
 {
     public class PersonFilterSpecification
     {
-        const int ADD_DAYS = 30;
+        const int AddDays = 30;
         public IQueryable<Person> Apply(IQueryable<Person> query, string? search, string? sort, bool upcoming)
         {
             if (!string.IsNullOrEmpty(search))
@@ -34,7 +34,7 @@ namespace CongratulatorSPA.Server.Specifications
 
             if (upcoming)
             {
-                var endDate = today.AddDays(ADD_DAYS);
+                var endDate = today.AddDays(AddDays);
 
                 return query.Where(p =>
                     (

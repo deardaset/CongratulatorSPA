@@ -5,8 +5,8 @@ namespace CongratulatorSPA.Server.Validators
 {
     public class CreatePersonValidator : AbstractValidator<CreatePersonRequest>
     {
-        const int PHOTO_MAX_LENGTH = 5_000_000;
-        const int MAX_AGE = 110;
+        const int PhotoMaxLength = 5_000_000;
+        const int MaxAge = 110;
         public CreatePersonValidator()
         {            
             RuleFor(x => x.Name)
@@ -30,14 +30,14 @@ namespace CongratulatorSPA.Server.Validators
                 .WithMessage("Only images allowed");
 
             RuleFor(x => x.Photo)
-                .Must(photo => photo == null || photo.Length <= PHOTO_MAX_LENGTH)
+                .Must(photo => photo == null || photo.Length <= PhotoMaxLength)
                 .WithMessage("Max 5MB");
         }
 
         private bool BeValidBirthDate(DateTime birthDate)
         {
             return birthDate <= DateTime.Today &&
-                   (DateTime.Today.Year - birthDate.Year) <= MAX_AGE;
+                   (DateTime.Today.Year - birthDate.Year) <= MaxAge;
         }
     }
 }
